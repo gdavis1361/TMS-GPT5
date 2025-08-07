@@ -1,0 +1,134 @@
+/* ui-accordion-header ui-helper-reset ui-state-default ui-corner-all */
+.ui-widget{
+	font-family: Arial;
+	font-size: 12px;
+}
+
+/* 995 total width*/
+#contact_left{
+	float: left;
+	padding: 10px 0px 0px 10px;
+	width: 320px;
+}
+
+/* 370 */
+#contact_middle{
+	float: left;
+	padding: 10px 10px 0px 10px;
+	width: 380px;
+}
+
+#contact_middle div {
+	padding: 5px
+}
+
+/* 266 */
+#contact_right{
+	float: right;
+	padding: 10px 10px 0px 0px;
+	width:260px;
+}
+
+#contact_middle .ui-corner-all{
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+}
+
+#contact_middle .ui-accordion-header{
+	padding: 5px;
+	border: 1px solid #cccccc;
+	font-family: Arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #2B2B2B;
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(50%,#f1f1f1), color-stop(51%,#e1e1e1), color-stop(100%,#f6f6f6)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* W3C */
+}
+
+/**********************************************************
+*	Similar Contacts
+***********************************************************/
+.similar-contacts-panel .x-panel-header{
+	border-radius: 0px !important;
+	-moz-border-radius: 0px !important;
+	-webkit-border-radius: 0px !important;
+}
+
+.similar-contact{
+	padding: 5px;
+	margin-bottom: 5px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 5px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.similar-contact .name, .similar-contact .location{
+	font-weight: bold;
+}
+
+.similar-contact .at{
+	font-style: italic;
+}
+
+.similar-contact .owner{
+	font-size: 10px;
+	font-style: italic;
+}
+
+.similar-contact-over{
+	background-color: #f1f1f1;
+	border-color: #BABABA;
+}
+
+/**********************************************************
+*	Customer Lookup / Customer Template
+***********************************************************/
+.customer-header{
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 20px;
+}
+
+/**********************************************************
+*	Customer Location Lookup / Customer Location Template
+***********************************************************/
+.customer-location-lookup-list .location-name{
+	font-weight: bold;
+	font-size:12px;
+}
+.customer-location-lookup-list .location-address, .customer-location-lookup-list .location-city-state-zip{
+	font-style: italic;
+	font-size: 10px;
+}
+
+.customer-location-header{
+	font-weight: bold;
+	font-size: 13px;
+	line-height: 20px;
+}
+
+.customer-location-name{
+	font-weight: bold;
+}
+
+.customer-location-address, .customer-location-city-state-zip{
+	font-style: italic;
+	font-size: 11px;
+}
+
+#comments_box {
+	border: 1px solid black;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	padding: 10px;
+}

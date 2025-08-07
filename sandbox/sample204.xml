@@ -1,0 +1,264 @@
+<?xml version="1.0"?>
+<Tenders>
+  <Tender>
+    <HeaderInfo>
+      <SenderId>123456789012345</SenderId>
+      <GSControl>123456789</GSControl>
+      <STControl>123456789</STControl>
+      <Date>08/15/2011</Date>
+      <Time>08:25</Time>
+    </HeaderInfo>
+    <Shipment>
+      <SCAC>ABCD</SCAC>
+      <ShipmentIdNumber>123456789012345678901234567890</ShipmentIdNumber>
+      <Payment>
+        <Code>PP</Code>
+        <Text>PREPAID</Text>
+      </Payment>
+      <Purpose>
+        <Code>00</Code>
+        <Text>ORIGINAL</Text>
+      </Purpose>
+      <ReferenceNumbers>
+        <ReferenceNumber>
+          <Code>BN</Code>
+          <Text>BOOKING NUMBER</Text>
+          <Number>123456789012345678901234567890</Number>
+        </ReferenceNumber>
+      </ReferenceNumbers>
+      <DateInfo>
+        <Code>64</Code>
+        <Text>RESPOND BY DATE</Text>
+        <Date>08/15/2011</Date>
+        <Time>12:00</Time>
+        <Zone>CT</Zone>
+      </DateInfo>
+      <Comments>
+        <Comment>TEST COMMENTS</Comment>
+      </Comments>
+      <TotalWeight>
+        <Weight>48000</Weight>
+        <Type>NET</Type>
+        <Uom>LBS</Uom>
+      </TotalWeight>
+      <TotalVolume>
+        <Volume>2000</Volume>
+        <Uom>CUBIC FT</Uom>
+      </TotalVolume>
+      <TotalQuantity>1200</TotalQuantity>
+      <Equipment>
+        <Initial>ABCD</Initial>
+        <Number>123456</Number>
+        <Length>53'00"</Length>
+        <Type>
+          <Code>RT</Code>
+          <Text>Controlled Temp Reefer</Text>
+        </Type>
+      </Equipment>
+      <Locations>
+        <Location>
+          <Org>BT</Org>
+          <Text>Bill To</Text>
+          <Name1>THE BILLING COMPANY</Name1>
+          <Name2>ACCOUNTING DEPT</Name2>
+          <Address1>123 N. ELM</Address1>
+          <Address2>SUITE 12</Address2>
+          <City>CHICAGO</City>
+          <State>IL</State>
+          <Zip>60601</Zip>
+          <Ctry>USA</Ctry>
+          <NameCode>TBC123</NameCode>
+          <Contacts>
+            <Contact>
+              <Name>JOE SCHMOUGH</Name>
+              <Phone>888-123-4567</Phone>
+              <Email>js@js.com</Email>
+            </Contact>
+          </Contacts>
+        </Location>
+      </Locations>
+    </Shipment>
+    <Stops>
+      <Stop>
+        <Sequence>01</Sequence>
+        <Code>CL</Code>
+        <Text>COMPLETE LOAD</Text>
+        <StopWeight>
+          <Weight>48000</Weight>
+          <Type>NET</Type>
+          <Uom>LBS</Uom>
+        </StopWeight>
+        <StopVolume>
+          <Volume>2000</Volume>
+          <Uom>CUBIC FT</Uom>
+        </StopVolume>
+        <StopQuantity>
+          <Quantity>1200</Quantity>
+          <Uom>PCS</Uom>
+          <Text>PIECES</Text>
+        </StopQuantity>
+        <Location>
+          <Name1>THE SHIPPING COMPANY</Name1>
+          <Name2></Name2>
+          <Address1>1919 FIRST</Address1>
+          <Address2>DOCK 5</Address2>
+          <City>CHICAGO</City>
+          <State>IL</State>
+          <Zip>60601</Zip>
+          <Ctry>USA</Ctry>
+          <NameCode>TSC1919</NameCode>
+          <Contacts>
+            <Contact>
+              <Name>STEVE GUY</Name>
+              <Phone>888-555-1313</Phone>
+              <Email>sg@sg.com</Email>
+            </Contact>
+          </Contacts>
+        </Location>
+        <Dates>
+          <DateInfo>
+            <Code>37</Code>
+            <Text>SHIP NOT BEFORE</Text>
+            <Date>08/17/2011</Date>
+            <Time>08:00</Time>
+            <Zone>CT</Zone>
+          </DateInfo>
+          <DateInfo>
+            <Code>38</Code>
+            <Text>SHIP NOT LATER THAN</Text>
+            <Date>08/17/2011</Date>
+            <Time>10:00</Time>
+            <Zone>CT</Zone>
+          </DateInfo>
+        </Dates>
+        <ReferenceNumbers>
+          <ReferenceNumber>
+            <Code>P8</Code>
+            <Text>PICKUP NUMBER</Text>
+            <Number>123456789012345678901234567890</Number>
+          </ReferenceNumber>
+        </ReferenceNumbers>
+        <Comments>
+          <Comment>TEST COMMENTS</Comment>
+        </Comments>
+        <LineItems>
+          <LineItem>
+            <LineWeight>
+              <Weight>48000</Weight>
+              <Type>NET</Type>
+              <Uom>LBS</Uom>
+            </LineWeight>
+            <LineVolume>
+              <Volume>2000</Volume>
+              <Uom>CUBIC FT</Uom>
+            </LineVolume>
+            <LineQuantity>
+              <Quantity>1200</Quantity>
+              <Uom>PCS</Uom>
+              <Text>PIECES</Text>
+            </LineQuantity>
+            <Description>FREIGHT OF ALL KINDS</Description>
+            <CommodityCode>123456789</CommodityCode>
+            <ReferenceNumbers>
+              <ReferenceNumber>
+                <Code>PO</Code>
+                <Text>PURCHASE ORDER</Text>
+                <Number>123456789012345678901234567890</Number>
+              </ReferenceNumber>
+            </ReferenceNumbers>
+          </LineItem>
+        </LineItems>
+      </Stop>
+      <Stop>
+        <Sequence>02</Sequence>
+        <Code>CU</Code>
+        <Text>COMPLETE UNLOAD</Text>
+        <StopWeight>
+          <Weight>48000</Weight>
+          <Type>NET</Type>
+          <Uom>LBS</Uom>
+        </StopWeight>
+        <StopVolume>
+          <Volume>2000</Volume>
+          <Uom>CUBIC FT</Uom>
+        </StopVolume>
+        <StopQuantity>
+          <Quantity>1200</Quantity>
+          <Uom>PCS</Uom>
+          <Text>PIECES</Text>
+        </StopQuantity>
+        <Location>
+          <Name1>THE DELIVERY STORE</Name1>
+          <Name2></Name2>
+          <Address1>415 67TH ST</Address1>
+          <Address2>DOOR 3</Address2>
+          <City>ROCKFORD</City>
+          <State>IL</State>
+          <Zip>61234</Zip>
+          <Ctry>USA</Ctry>
+          <NameCode>DS415</NameCode>
+          <Contacts>
+            <Contact>
+              <Name>JOE JOHNSON</Name>
+              <Phone>888-666-1111</Phone>
+              <Email>jj@jj.com</Email>
+            </Contact>
+          </Contacts>
+        </Location>
+        <Dates>
+          <DateInfo>
+            <Code>53</Code>
+            <Text>DELIVER NOT BEFORE</Text>
+            <Date>08/17/2011</Date>
+            <Time>14:00</Time>
+            <Zone>CT</Zone>
+          </DateInfo>
+          <DateInfo>
+            <Code>54</Code>
+            <Text>DELIVER NOT LATER THAN</Text>
+            <Date>08/17/2011</Date>
+            <Time>16:00</Time>
+            <Zone>CT</Zone>
+          </DateInfo>
+        </Dates>
+        <ReferenceNumbers>
+          <ReferenceNumber>
+            <Code>DJ</Code>
+            <Text>DELIVERY TICKET NUMBER</Text>
+            <Number>123456789012345678901234567890</Number>
+          </ReferenceNumber>
+        </ReferenceNumbers>
+        <Comments>
+          <Comment>TEST COMMENTS</Comment>
+        </Comments>
+        <LineItems>
+          <LineItem>
+            <LineWeight>
+              <Weight>48000</Weight>
+              <Type>NET</Type>
+              <Uom>LBS</Uom>
+            </LineWeight>
+            <LineVolume>
+              <Volume>2000</Volume>
+              <Uom>CUBIC FT</Uom>
+            </LineVolume>
+            <LineQuantity>
+              <Quantity>1200</Quantity>
+              <Uom>PCS</Uom>
+              <Text>PIECES</Text>
+            </LineQuantity>
+            <Description>FREIGHT OF ALL KINDS</Description>
+            <CommodityCode>123456789</CommodityCode>
+            <ReferenceNumbers>
+              <ReferenceNumber>
+                <Code>PO</Code>
+                <Text>PURCHASE ORDER</Text>
+                <Number>123456789012345678901234567890</Number>
+              </ReferenceNumber>
+            </ReferenceNumbers>
+          </LineItem>
+        </LineItems>
+      </Stop>
+    </Stops>
+  </Tender>
+</Tenders>

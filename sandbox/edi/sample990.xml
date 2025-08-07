@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<?kli format="990" sender="AATJ" receiver="069331990T" ctrl="00001" ?>
+<Responses>
+  <Response>
+    <SCAC>AATJ</SCAC>
+    <ShipmentIdNumber>ALC20458568M</ShipmentIdNumber>
+    <ResponseCode>A</ResponseCode>
+    <ProNumber>12345678</ProNumber>
+    <DeclineCode></DeclineCode>
+    <Comments></Comments>
+    <ReferenceNumbers>
+      <ReferenceNumber>
+        <Number>DY3HX5      01</Number>
+        <Code>PO</Code>
+      </ReferenceNumber>
+    </ReferenceNumbers>
+  </Response>
+</Responses>

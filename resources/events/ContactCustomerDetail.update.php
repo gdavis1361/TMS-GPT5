@@ -1,0 +1,1 @@
+LeagueStats::update_contact_details

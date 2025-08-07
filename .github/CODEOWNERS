@@ -1,0 +1,12 @@
+# Default owners
+* @your-org/engineering
+
+# Apps
+/apps/web/ @your-org/frontend
+/apps/api/ @your-org/backend
+
+# Packages
+/packages/ui/ @your-org/frontend
+/packages/types/ @your-org/engineering
+/packages/config/ @your-org/engineering
+

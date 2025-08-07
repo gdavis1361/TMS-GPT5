@@ -1,0 +1,53 @@
+html, body, td, * {
+	font-family:Arial, sans-serif;
+	font-size:13px;
+}
+
+h2 {
+	text-transform:uppercase;
+	font-weight:normal;
+	text-decoration:underline;
+	margin:10px 0 0 0;
+}
+
+ul, p {
+	margin:2px 0;
+}
+
+#header {
+	width:100%;
+}
+
+#header .column {
+	width:33%;
+}
+
+.left {
+	text-align:left;
+}
+.center {
+	text-align:center;
+}
+.right {
+	text-align:right;
+}
+
+.documentTitle {
+	text-transform: uppercase;
+}
+
+.dataTable {
+	width:100%;
+	border-collapse:collapse;
+}
+.dataTable td {
+	padding:3px 10px;
+}
+
+.divider {
+	border-bottom:1px solid black;
+}
+
+.strong {
+	font-weight:bold;
+}

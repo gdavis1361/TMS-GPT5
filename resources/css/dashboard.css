@@ -1,0 +1,97 @@
+#tasksWrap {
+	width:950px;
+	margin:0 auto;
+}
+
+.tableHeading {
+	font-size:18px;
+}
+
+#taskTable1 {
+	background:#ffe1e1;
+	border:#f66 1px solid;
+	padding:3px 0;
+	color:#222;
+	font-weight:bold;
+}
+#taskTable2 {
+	margin-top:5px;border-top:1px solid #eee;
+}
+#taskTable3 {
+	background:#ebf0f6;
+	border:#95b1cf 1px solid;
+	padding:3px 0;
+	color:#222;
+	font-weight:bold;
+}
+
+#completedHeader {
+	color:#090;
+}
+
+#leftNav a{
+	padding:4px 0 1px 5px;
+	font-size:12px;
+	color:#999;
+	text-decoration:none;
+	display:block;
+}
+
+#leftNav a img{
+	visibility:hidden;
+	padding-right:5px;
+}
+
+#leftNav a:hover{
+	color:#333;
+}
+
+#leftNav a.active{
+	font-size:13px;
+	color:#333;
+	font-weight:bold;
+}
+
+#leftNav a.active img{
+	visibility:visible !important;
+}
+
+.task_tables .row{
+	padding:2px 0 2px 10px;
+}
+
+.task_tables .due{
+	padding-bottom:5px;
+	float:right;
+	width:90px;
+	color:#f00;
+}
+
+.task_tables .type{
+	width:120px;
+	float:right;
+}
+
+.task_tables .minirow{
+	font-size:1px;height:1px;
+}
+
+.task_action {
+	float:left;
+}
+
+.overdue-table .due-field {
+	
+}
+
+.due-header {
+	width:120px;
+}
+
+.type-header {
+	width:120px;
+}
+
+.time-difference {
+	
+}

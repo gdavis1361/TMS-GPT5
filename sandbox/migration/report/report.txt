@@ -1,0 +1,9 @@
+Starting migration at 6/24/11 5:16pm
+Migrating Users starting at record 0 (Page 1 with 500 per page)
+96.317074775696 Finished Migrating Users starting at record 0 (Page 1 with 500 per page)
+Migrating Users starting at record 500 (Page 2 with 500 per page)
+0.016120910644531 Finished Migrating Users starting at record 500 (Page 2 with 500 per page)
+Migrating Contacts starting at record 0 (Page 1 with 500 per page)
+113.54080104828 Finished Migrating Contacts starting at record 0 (Page 1 with 500 per page)
+Migrating Contacts starting at record 500 (Page 2 with 500 per page)
+64.031187057495 Finished Migrating Contacts starting at record 500 (Page 2 with 500 per page)

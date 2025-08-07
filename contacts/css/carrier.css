@@ -1,0 +1,19 @@
+/*****************************************
+*	Carrier Lookup
+******************************************/
+.carrier-lookup .x-form-text{
+	height: 40px !important;
+	font-size: 18px;
+}
+
+.carrier-lookup-list .carrier-name{
+	font-weight: bold;
+}
+
+.carrier-lookup-list .carrier-number{
+	font-style: italic;
+}
+
+.carrier-lookup-list li{
+	border-bottom: 1px solid #dddddd;
+}

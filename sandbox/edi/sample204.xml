@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<Tenders>
+	<Tender>
+		<HeaderInfo>
+			<SenderId>069331990T</SenderId>
+			<GSControl>204004652</GSControl>
+			<STControl>204014176</STControl>
+			<Date>08/26/2011</Date>
+			<Time>10:36</Time>
+		</HeaderInfo>
+		<Shipment>
+			<SCAC>AATJ</SCAC>
+			<ShipmentIdNumber>ALC20458568M</ShipmentIdNumber>
+			<Payment>
+				<Code>CC</Code>
+				<Text>Collect</Text>
+			</Payment>
+			<Purpose>
+				<Code>00</Code>
+				<Code>ORIGINAL</Code>
+			</Purpose>
+			<Comments>
+				<Comment>SEASONAL</Comment>
+			</Comments>
+			<Equipment>
+				<Number>0</Number>
+				<Length>53&apos;00&quot;</Length>
+				<Type>
+					<Code>TV</Code>
+					<Text>TRUCK, VAN</Text>
+				</Type>
+			</Equipment>
+		</Shipment>
+		<Stops>
+			<Stop>
+				<Sequence>1</Sequence>
+				<Code>LD</Code>
+				<Text>LOAD</Text>
+				<StopWeight>
+					<Weight>8318</Weight>
+					<Uom>LBS</Uom>
+				</StopWeight>
+				<Location>
+					<Org>SF</Org>
+					<Text>Ship from</Text>
+					<Name1>TLC CANDLE</Name1>
+					<NameCode>V087234</NameCode>
+					<Address1>208 NORTH 12TH STREET</Address1>
+					<City>MAYFIELD</City>
+					<State>KY</State>
+					<Zip>42066</Zip>
+					<Ctry>US</Ctry>
+					<Contacts>
+						<Contact>
+							<Name>JEN OR JERRI</Name>
+							<Phone>2702512888</Phone>
+						</Contact>
+					</Contacts>
+				</Location>
+				<Dates>
+					<DateInfo>
+						<Code>EP</Code>
+						<Text>EARLIEST PICKUP</Text>
+						<Date>08/29/2011</Date>
+					</DateInfo>
+				</Dates>
+				<Comments>
+					<Comment>706</Comment>
+					<Comment>12 pallets</Comment>
+				</Comments>
+				<LineItems>
+					<LineItem>
+						<Description>PALLETIZED</Description>
+						<LineQuantity>
+							<Quantity>718</Quantity>
+							<Uom>CASES</Uom>
+						</LineQuantity>
+						<ReferenceNumbers>
+							<ReferenceNumber>
+								<Number>DY3HX5      01</Number>
+								<Code>PO</Code>
+								<Text>PURCHASE ORDER</Text>
+							</ReferenceNumber>
+						</ReferenceNumbers>
+					</LineItem>
+				</LineItems>
+			</Stop>
+			<Stop>
+				<Sequence>2</Sequence>
+				<Code>UL</Code>
+				<Text>UNLOAD</Text>
+				<StopWeight>
+					<Weight>8318</Weight>
+					<Uom>LBS</Uom>
+				</StopWeight>
+				<Location>
+					<Org>ST</Org>
+					<Text>Ship to</Text>
+					<Name1>ALACHUA DISTRIBUTION CENTER</Name1>
+					<NameCode>D6800</NameCode>
+					<Address1>12000 NW 173 ST</Address1>
+					<City>ALACHUA</City>
+					<State>FL</State>
+					<Zip>32615</Zip>
+					<Ctry>US</Ctry>
+					<Contacts>
+						<Contact>
+							<Name>DG TRANSPORTATION</Name>
+							<Phone>6158554485</Phone>
+						</Contact>
+					</Contacts>
+				</Location>
+				<Dates>
+					<DateInfo>
+						<Code>54</Code>
+						<Text>DELIVER NO LATER THAN</Text>
+						<Date>09/05/2011</Date>
+					</DateInfo>
+				</Dates>
+				<Comments>
+					<Comment>0</Comment>
+					<Comment>12 pallets</Comment>
+				</Comments>
+				<LineItems>
+					<LineItem>
+						<Description>PALLETIZED</Description>
+						<LineQuantity>
+							<Quantity>718</Quantity>
+							<Uom>CASES</Uom>
+						</LineQuantity>
+						<ReferenceNumbers>
+							<ReferenceNumber>
+								<Number>DY3HX5      01</Number>
+								<Code>PO</Code>
+								<Text>PURCHASE ORDER</Text>
+							</ReferenceNumber>
+						</ReferenceNumbers>
+					</LineItem>
+				</LineItems>
+			</Stop>
+		</Stops>
+	</Tender>
+	<Tender>
+		<HeaderInfo>
+			<SenderId>069331990T</SenderId>
+			<GSControl>204004652</GSControl>
+			<STControl>204014177</STControl>
+			<Date>08/26/2011</Date>
+			<Time>10:36</Time>
+		</HeaderInfo>
+		<Shipment>
+			<SCAC>AATJ</SCAC>
+			<ShipmentIdNumber>ARD20458956M</ShipmentIdNumber>
+			<Payment>
+				<Code>CC</Code>
+				<Text>Collect</Text>
+			</Payment>
+			<Purpose>
+				<Code>00</Code>
+				<Code>ORIGINAL</Code>
+			</Purpose>
+			<Comments>
+				<Comment>NORMAL</Comment>
+			</Comments>
+			<Equipment>
+				<Number>0</Number>
+				<Length>53&apos;00&quot;</Length>
+				<Type>
+					<Code>TV</Code>
+					<Text>TRUCK, VAN</Text>
+				</Type>
+			</Equipment>
+		</Shipment>
+		<Stops>
+			<Stop>
+				<Sequence>1</Sequence>
+				<Code>LD</Code>
+				<Text>LOAD</Text>
+				<StopWeight>
+					<Weight>38265</Weight>
+					<Uom>LBS</Uom>
+				</StopWeight>
+				<Location>
+					<Org>SF</Org>
+					<Text>Ship from</Text>
+					<Name1>PENNINGTON SEED</Name1>
+					<NameCode>V049320</NameCode>
+					<Address1>HIWAY 160 GREENFIELD IND PK</Address1>
+					<Address2>WHSE 10</Address2>
+					<City>GREENFIELD</City>
+					<State>MO</State>
+					<Zip>65661</Zip>
+					<Ctry>US</Ctry>
+					<Contacts>
+						<Contact>
+							<Name>BRENDA</Name>
+							<Phone>4176375978</Phone>
+						</Contact>
+					</Contacts>
+				</Location>
+				<Dates>
+					<DateInfo>
+						<Code>EP</Code>
+						<Text>EARLIEST PICKUP</Text>
+						<Date>09/01/2011</Date>
+					</DateInfo>
+				</Dates>
+				<Comments>
+					<Comment>374</Comment>
+					<Comment>18 pallets</Comment>
+				</Comments>
+				<LineItems>
+					<LineItem>
+						<Description>PALLETIZED</Description>
+						<LineQuantity>
+							<Quantity>819</Quantity>
+							<Uom>CASES</Uom>
+						</LineQuantity>
+						<ReferenceNumbers>
+							<ReferenceNumber>
+								<Number>DY4452      01</Number>
+								<Code>PO</Code>
+								<Text>PURCHASE ORDER</Text>
+							</ReferenceNumber>
+						</ReferenceNumbers>
+					</LineItem>
+				</LineItems>
+			</Stop>
+			<Stop>
+				<Sequence>2</Sequence>
+				<Code>UL</Code>
+				<Text>UNLOAD</Text>
+				<StopWeight>
+					<Weight>38265</Weight>
+					<Uom>LBS</Uom>
+				</StopWeight>
+				<Location>
+					<Org>ST</Org>
+					<Text>Ship to</Text>
+					<Name1>ARDMORE DISTRIBUTION CENTER</Name1>
+					<NameCode>D6300</NameCode>
+					<Address1>ARDMORE IND. AIRPARK</Address1>
+					<Address2>401 GENERAL DR.</Address2>
+					<City>ARDMORE</City>
+					<State>OK</State>
+					<Zip>73401</Zip>
+					<Ctry>US</Ctry>
+					<Contacts>
+						<Contact>
+							<Name>DG TRANSPORTATION</Name>
+							<Phone>6158554485</Phone>
+						</Contact>
+					</Contacts>
+				</Location>
+				<Dates>
+					<DateInfo>
+						<Code>54</Code>
+						<Text>DELIVER NO LATER THAN</Text>
+						<Date>09/05/2011</Date>
+					</DateInfo>
+				</Dates>
+				<Comments>
+					<Comment>0</Comment>
+					<Comment>18 pallets</Comment>
+				</Comments>
+				<LineItems>
+					<LineItem>
+						<Description>PALLETIZED</Description>
+						<LineQuantity>
+							<Quantity>819</Quantity>
+							<Uom>CASES</Uom>
+						</LineQuantity>
+						<ReferenceNumbers>
+							<ReferenceNumber>
+								<Number>DY4452      01</Number>
+								<Code>PO</Code>
+								<Text>PURCHASE ORDER</Text>
+							</ReferenceNumber>
+						</ReferenceNumbers>
+					</LineItem>
+				</LineItems>
+			</Stop>
+		</Stops>
+	</Tender>
+</Tenders>

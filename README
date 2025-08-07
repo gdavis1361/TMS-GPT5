@@ -1,0 +1,31 @@
+----------------------------------------------------------
+ Steps for a new release/push to master
+----------------------------------------------------------
+
+Make sure you have a staging environment setup, the system autodetects a staging
+host name. This can be any name with the word "staging" in the name.
+For example aat.tms.staging, staging.tms, jared.tms.staging, jared.staging.tms etc... 
+Use the staging domain for the following steps
+
+1. Run the build tool located at /resources/build/build. Use --h for usage information.
+2. Test to make sure the build compiled and runs successfully.
+3. Test any new features, to make sure compilation worked successfully
+
+----------------------------------------------------------
+ TMS Modern Monorepo (new)
+----------------------------------------------------------
+
+Quickstart
+- Node: see .nvmrc (use Node 20)
+- Install: npm ci
+- Dev (docker, optional): docker-compose up -d
+- Web dev: npm run dev -w @tms/web
+- API dev: npm run dev -w @tms/api
+ - Run CI locally (subset): npm run lint && npm run build
+
+CI
+- Lint, typecheck, prettier check, build
+- npm audit, CodeQL, Trivy, SBOM artifact
+
+Contributing
+- See CONTRIBUTING.md; conventional commits enforced via commitlint

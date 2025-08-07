@@ -1,0 +1,2 @@
+FakeClass::fakeAction
+FakeClass2::anotherFakeAction

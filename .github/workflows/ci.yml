@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm i -g npm@latest
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run -ws -if-present typecheck || true
+      - run: npx prettier --check .
+      - run: npm run build
+      - run: npm test
+      - name: Security audit (npm)
+        run: npm audit --workspaces --include-workspace-root --audit-level=high
+      # License check can be added later once policy is defined
+      # SBOM step to be added once a compatible generator for Node 22 is selected
+

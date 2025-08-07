@@ -1,0 +1,22 @@
+node_modules/
+.next/
+.turbo/
+dist/
+.DS_Store
+.env*
+coverage/
+build/
+*.log
+.idea/
+.vscode/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+# generic files to ignore
+test*.php
+*.DS_Store
+.buildpath
+.project
+.settings/
+/nbproject/*
+/resources/js/extjs/resources/sass/.sass-cache/

@@ -1,0 +1,92 @@
+html, body, td, * {
+	font-family:Arial, sans-serif;
+	font-size:13px;
+}
+
+td {
+	vertical-align:top;
+}
+
+.cell1 {
+	width:8%;
+}
+.cell2 {
+	width:10%;
+}
+.cell3 {
+	width:16%;
+}
+.cell4 {
+	width:12%;
+}
+.cell5 {
+	width:20%;
+}
+.cell6 {
+	width:15%;
+}
+.cell7 {
+	width:18%;
+}
+
+#pageLogo {
+	height:70px;
+}
+
+h1 {
+	font-size:20px;
+}
+
+h2 {
+	text-transform:uppercase;
+	font-weight:normal;
+	text-decoration:underline;
+	padding:10px 0 0 0;
+	margin:0;
+}
+
+ul, p {
+	margin:2px 0;
+}
+
+#header {
+	width:100%;
+}
+
+#header .column {
+	width:33%;
+}
+
+.left {
+	text-align:left;
+}
+.center {
+	text-align:center;
+}
+.right {
+	text-align:right;
+}
+
+.documentTitle {
+	text-transform: uppercase;
+}
+
+.dataTable {
+	width:100%;
+	border-collapse:collapse;
+}
+.dataTable td {
+	padding:4px 10px 2px;
+}
+
+.divider {
+	border-bottom:1px solid black;
+}
+
+.strong {
+	font-weight:bold;
+}
+
+.signature-line {
+	height:35px;
+}

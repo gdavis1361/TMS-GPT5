@@ -1,0 +1,38 @@
+.league-week{
+	padding: 5px;
+	margin: 5px;
+	border: 1px solid #ddd;
+}
+
+.league-week .title{
+	font-weight: bold;
+}
+
+.league-week .date{
+	font-style: italic;
+	font-size: 10px;
+}
+
+.league-week.x-item-selected{
+	background-color: #ddd;
+}
+
+.league-game-container{
+	float: left;
+	display: inline;
+	width: 50%;
+}
+
+.league-game{
+	margin: 5px;
+	padding: 10px;
+	border: 1px solid #ddd;
+}
+
+.league-game.x-item-selected{
+	background-color: #ddd;
+}
+
+.league-game .image, .league-game .score, .league-game .game-footer{
+	display: none;
+}
