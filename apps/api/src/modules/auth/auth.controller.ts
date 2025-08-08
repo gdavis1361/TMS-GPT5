@@ -37,4 +37,24 @@ export class AuthController {
   logout(@Body() dto: { userId: string }) {
     return this.auth.revokeAll(dto.userId)
   }
+
+  @Post('request-email-verification')
+  requestEmailVerification(@Body() dto: { email: string }) {
+    return this.auth.requestEmailVerification(dto.email)
+  }
+
+  @Post('verify-email')
+  verifyEmail(@Body() dto: { email: string; token: string }) {
+    return this.auth.verifyEmail(dto.email, dto.token)
+  }
+
+  @Post('request-password-reset')
+  requestPasswordReset(@Body() dto: { email: string }) {
+    return this.auth.requestPasswordReset(dto.email)
+  }
+
+  @Post('reset-password')
+  resetPassword(@Body() dto: { email: string; token: string; newPassword: string }) {
+    return this.auth.resetPassword(dto.email, dto.token, dto.newPassword)
+  }
 }

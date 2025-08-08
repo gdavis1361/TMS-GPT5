@@ -89,9 +89,9 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Login, refresh with rotation; revoke-all support
 - [ ] Logout endpoint wiring and device/session tracking
 - [x] RBAC: roles on user and route guards
-- [ ] Email verification, password reset (single-use token + expiry)
+- [x] Email verification, password reset (single-use token + expiry)
 - [ ] CSRF (if cookie-based), rate limiting, brute-force protection
-- [ ] Audit log for auth events
+- [x] Audit log for auth events
 
 ## Phase 4 — Frontend foundation (Next.js)
 

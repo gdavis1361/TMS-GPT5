@@ -12,9 +12,13 @@ model User {
   email     String   @unique
   hash      String
   role      Role     @default(USER)
+  emailVerifiedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   refreshTokens RefreshToken[]
+  emailTokens EmailVerificationToken[]
+  resetTokens PasswordResetToken[]
+  auditLogs   AuditLog[]
 }
 
 model Contact {
@@ -39,6 +43,39 @@ model RefreshToken {
   replacedBy String?
   userAgent  String?
   ip         String?
+}
+
+model EmailVerificationToken {
+  id         String   @id @default(cuid())
+  tokenId    String   @unique
+  tokenHash  String
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  usedAt     DateTime?
+}
+
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  tokenId    String   @unique
+  tokenHash  String
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  usedAt     DateTime?
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  event     String
+  ip        String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime @default(now())
 }
 
 enum Role {
