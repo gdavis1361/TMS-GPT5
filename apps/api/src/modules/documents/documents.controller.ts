@@ -41,6 +41,12 @@ class ListQueryDto {
   @IsOptional()
   @IsString()
   orderId?: string
+  @IsOptional()
+  @IsString()
+  dateFrom?: string
+  @IsOptional()
+  @IsString()
+  dateTo?: string
   @Type(() => Number)
   @IsOptional()
   page?: number = 1
@@ -58,10 +64,20 @@ export class DocumentsController {
   async list(@Req() req: any, @Query() query: ListQueryDto) {
     const page = Math.max(1, Number(query.page) || 1)
     const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 25))
+    const dateFrom = query.dateFrom ? new Date(query.dateFrom) : undefined
+    const dateTo = query.dateTo ? new Date(query.dateTo) : undefined
     const where: Prisma.DocumentWhereInput = {
       AND: [
         query.customerId ? { customerId: query.customerId } : {},
         query.orderId ? { orderId: query.orderId } : {},
+        dateFrom ? { createdAt: { gte: dateFrom } } : {},
+        dateTo ? { createdAt: { lte: dateTo } } : {},
+        {
+          OR: [
+            { customer: { ownerId: req.user.id } },
+            { order: { customer: { ownerId: req.user.id } } },
+          ],
+        },
         { deletedAt: null },
       ],
     }

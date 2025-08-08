@@ -31,6 +31,15 @@ class ListQueryDto {
   @IsOptional()
   @IsString()
   q?: string
+  @IsOptional()
+  @IsString()
+  tag?: string
+  @IsOptional()
+  @IsString()
+  dateFrom?: string
+  @IsOptional()
+  @IsString()
+  dateTo?: string
   @Type(() => Number)
   @IsOptional()
   page?: number = 1
@@ -50,6 +59,8 @@ export class CustomersController {
     const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 25))
     const mode = Prisma.QueryMode.insensitive
     const q = query.q
+    const dateFrom = query.dateFrom ? new Date(query.dateFrom) : undefined
+    const dateTo = query.dateTo ? new Date(query.dateTo) : undefined
     const whereActive: Prisma.CustomerWhereInput = {
       AND: [
         { ownerId: req.user.id },
@@ -62,6 +73,9 @@ export class CustomersController {
               ],
             }
           : {},
+        query.tag ? { tags: { has: query.tag } } : {},
+        dateFrom ? { createdAt: { gte: dateFrom } } : {},
+        dateTo ? { createdAt: { lte: dateTo } } : {},
         { deletedAt: null },
       ],
     }

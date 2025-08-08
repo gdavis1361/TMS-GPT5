@@ -31,6 +31,12 @@ class ListQueryDto {
   @IsOptional()
   @IsEnum(OrderStatus)
   status?: OrderStatus
+  @IsOptional()
+  @IsString()
+  dateFrom?: string
+  @IsOptional()
+  @IsString()
+  dateTo?: string
   @Type(() => Number)
   @IsOptional()
   page?: number = 1
@@ -48,10 +54,15 @@ export class OrdersController {
   async list(@Req() req: any, @Query() query: ListQueryDto) {
     const page = Math.max(1, Number(query.page) || 1)
     const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 25))
+    const dateFrom = query.dateFrom ? new Date(query.dateFrom) : undefined
+    const dateTo = query.dateTo ? new Date(query.dateTo) : undefined
     const where: Prisma.OrderWhereInput = {
       AND: [
         query.customerId ? { customerId: query.customerId } : {},
         query.status ? { status: query.status } : {},
+        dateFrom ? { createdAt: { gte: dateFrom } } : {},
+        dateTo ? { createdAt: { lte: dateTo } } : {},
+        { customer: { ownerId: req.user.id } },
         { deletedAt: null },
       ],
     }

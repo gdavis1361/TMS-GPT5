@@ -97,6 +97,7 @@ model Customer {
 
   @@index([name])
   @@index([ownerId])
+  @@index([createdAt])
 }
 
 model Location {
@@ -141,6 +142,7 @@ model Order {
 
   @@index([customerId])
   @@index([status])
+  @@index([createdAt])
 }
 
 model Document {
@@ -159,6 +161,7 @@ model Document {
 
   @@index([customerId])
   @@index([orderId])
+  @@index([createdAt])
 }
 
 enum Role {
