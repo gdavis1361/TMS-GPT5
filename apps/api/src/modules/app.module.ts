@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { AppController } from '../routes/app.controller'
 import { SecurityHeadersGuard } from '../security/security-headers.guard'
@@ -12,6 +13,7 @@ import { AuthModule } from './auth/auth.module'
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({ throttlers: [{ ttl: 60, limit: 100 }] }),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -29,6 +31,7 @@ import { AuthModule } from './auth/auth.module'
       provide: APP_GUARD,
       useClass: SecurityHeadersGuard,
     },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     {
       provide: APP_INTERCEPTOR,
       useClass: RequestIdInterceptor,

@@ -21,8 +21,25 @@ export class AuthService {
   async login(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email } })
     if (!user) throw new UnauthorizedException('Invalid credentials')
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      throw new UnauthorizedException('Account temporarily locked')
+    }
     const ok = await argon2.verify(user.hash, password)
-    if (!ok) throw new UnauthorizedException('Invalid credentials')
+    if (!ok) {
+      const failed = (user.failedLoginCount ?? 0) + 1
+      const lock = failed >= 5 ? new Date(Date.now() + 15 * 60 * 1000) : null
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: { failedLoginCount: failed, lockedUntil: lock ?? undefined },
+      })
+      await this.log(user.id, 'auth.login_failed', { failed })
+      throw new UnauthorizedException('Invalid credentials')
+    }
+    // success: reset counters
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { failedLoginCount: 0, lockedUntil: null },
+    })
     await this.log(user.id, 'auth.login', {})
     return this.issueTokens(user.id)
   }
@@ -164,6 +181,23 @@ export class AuthService {
     await this.prisma.auditLog.create({
       data: { userId: userId ?? undefined, event, metadata: metadata as any },
     })
+  }
+
+  async listSessions(userId: string) {
+    const sessions = await this.prisma.refreshToken.findMany({
+      where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
+      orderBy: { createdAt: 'desc' },
+    })
+    return { items: sessions }
+  }
+
+  async revokeOne(userId: string, tokenId: string) {
+    await this.prisma.refreshToken.updateMany({
+      where: { userId, tokenId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    })
+    await this.log(userId, 'auth.revoke_one', { tokenId })
+    return { ok: true }
   }
 }
 

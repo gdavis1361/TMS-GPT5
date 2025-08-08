@@ -21,6 +21,7 @@
     "@nestjs/jwt": "10.2.0",
     "@nestjs/platform-fastify": "10.4.7",
     "@nestjs/swagger": "7.4.2",
+    "@nestjs/throttler": "^6.4.0",
     "@prisma/client": "5.16.1",
     "argon2": "0.40.3",
     "class-transformer": "0.5.1",

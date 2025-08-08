@@ -1,6 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { IsEmail, IsString, Matches, MinLength } from 'class-validator'
+import { UseGuards, Get, Req } from '@nestjs/common'
+import { Throttle } from '@nestjs/throttler'
+import { AuthGuard } from './auth.guard'
 
 class CredentialsDto {
   @IsEmail()
@@ -24,6 +27,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @Throttle({ default: { limit: 5, ttl: 60 } })
   login(@Body() dto: CredentialsDto) {
     return this.auth.login(dto.email, dto.password)
   }
@@ -39,22 +43,38 @@ export class AuthController {
   }
 
   @Post('request-email-verification')
+  @Throttle({ default: { limit: 5, ttl: 300 } })
   requestEmailVerification(@Body() dto: { email: string }) {
     return this.auth.requestEmailVerification(dto.email)
   }
 
   @Post('verify-email')
+  @Throttle({ default: { limit: 5, ttl: 300 } })
   verifyEmail(@Body() dto: { email: string; token: string }) {
     return this.auth.verifyEmail(dto.email, dto.token)
   }
 
   @Post('request-password-reset')
+  @Throttle({ default: { limit: 5, ttl: 300 } })
   requestPasswordReset(@Body() dto: { email: string }) {
     return this.auth.requestPasswordReset(dto.email)
   }
 
   @Post('reset-password')
+  @Throttle({ default: { limit: 5, ttl: 300 } })
   resetPassword(@Body() dto: { email: string; token: string; newPassword: string }) {
     return this.auth.resetPassword(dto.email, dto.token, dto.newPassword)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('sessions')
+  listSessions(@Req() req: any) {
+    return this.auth.listSessions(req.user.id)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('revoke')
+  revoke(@Req() req: any, @Body() dto: { tokenId: string }) {
+    return this.auth.revokeOne(req.user.id, dto.tokenId)
   }
 }
