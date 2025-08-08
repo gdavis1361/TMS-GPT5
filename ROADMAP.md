@@ -72,7 +72,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Bootstrap NestJS (Fastify)
 - [x] Global config + env validation (ConfigModule + Joi)
 - [x] Add Prisma Postgres connection (local Postgres 16)
-- [ ] Prisma schema: users, roles, sessions/tokens, contacts, customers, orders, locations, documents
+- [x] Prisma schema: users, roles, sessions/tokens, contacts, customers, orders, locations, documents
   - [x] `User` model
   - [x] `Role` enum and RBAC field on user
   - [x] `RefreshToken` model (sessions/tokens)

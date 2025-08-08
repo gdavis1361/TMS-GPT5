@@ -9,6 +9,10 @@ import * as Joi from 'joi'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { RequestIdInterceptor } from '../shared/request-id.interceptor'
 import { ContactsModule } from './contacts/contacts.module'
+import { CustomersModule } from './customers/customers.module'
+import { LocationsModule } from './locations/locations.module'
+import { OrdersModule } from './orders/orders.module'
+import { DocumentsModule } from './documents/documents.module'
 import { AuthModule } from './auth/auth.module'
 
 @Module({
@@ -22,6 +26,10 @@ import { AuthModule } from './auth/auth.module'
       }),
     }),
     ContactsModule,
+    CustomersModule,
+    LocationsModule,
+    OrdersModule,
+    DocumentsModule,
     AuthModule,
   ],
   controllers: [AppController],

@@ -81,6 +81,84 @@ model AuditLog {
   createdAt DateTime @default(now())
 }
 
+model Customer {
+  id         String    @id @default(cuid())
+  name       String
+  email      String?   @unique
+  phone      String?
+  tags       String[]  @default([])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  locations  Location[]
+  orders     Order[]
+  documents  Document[]
+
+  @@index([name])
+}
+
+model Location {
+  id          String    @id @default(cuid())
+  customerId  String
+  customer    Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  name        String
+  address1    String?
+  address2    String?
+  city        String?
+  state       String?
+  postalCode  String?
+  country     String?
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([customerId])
+}
+
+enum OrderStatus {
+  DRAFT
+  PLACED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  status      OrderStatus @default(DRAFT)
+  totalCents  Int         @default(0)
+  currency    String      @default("USD")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+  documents   Document[]
+
+  @@index([customerId])
+  @@index([status])
+}
+
+model Document {
+  id          String    @id @default(cuid())
+  customerId  String?
+  customer    Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  orderId     String?
+  order       Order?    @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  filename    String
+  mimeType    String
+  size        Int
+  storageKey  String     @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+
+  @@index([customerId])
+  @@index([orderId])
+}
+
 enum Role {
   USER
   ADMIN
