@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+  Req,
+} from '@nestjs/common'
+import { AuthGuard } from '../auth/auth.guard'
 import { PrismaService } from '../../prisma/prisma.service'
 import { Prisma, OrderStatus } from '@prisma/client'
 import { IsEnum, IsOptional, IsString } from 'class-validator'
@@ -27,12 +39,13 @@ class ListQueryDto {
   pageSize?: number = 25
 }
 
+@UseGuards(AuthGuard)
 @Controller({ path: 'orders', version: '1' })
 export class OrdersController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get()
-  async list(@Query() query: ListQueryDto) {
+  async list(@Req() req: any, @Query() query: ListQueryDto) {
     const page = Math.max(1, Number(query.page) || 1)
     const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 25))
     const where: Prisma.OrderWhereInput = {
@@ -55,7 +68,7 @@ export class OrdersController {
   }
 
   @Post()
-  create(@Body() dto: UpsertOrderDto) {
+  create(@Req() req: any, @Body() dto: UpsertOrderDto) {
     return this.prisma.order.create({ data: { customerId: dto.customerId, status: dto.status } })
   }
 

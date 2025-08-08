@@ -18,14 +18,28 @@ describe('Orders', () => {
     await app.close()
   })
   it('list + create', async () => {
-    const customer = await prisma.customer.create({ data: { name: 'Cust B' } })
+    const email = `o${Date.now()}@example.com`
+    const password = 'Password123!'
+    const signup = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/signup',
+      payload: { email, password },
+    })
+    const { access_token } = signup.json() as any
+    const user = await prisma.user.findUniqueOrThrow({ where: { email } })
+    const customer = await prisma.customer.create({ data: { ownerId: user.id, name: 'Cust B' } })
     const create = await app.inject({
       method: 'POST',
       url: '/v1/orders',
+      headers: { authorization: `Bearer ${access_token}` },
       payload: { customerId: customer.id },
     })
     expect(create.statusCode).toBe(201)
-    const list = await app.inject({ method: 'GET', url: '/v1/orders' })
+    const list = await app.inject({
+      method: 'GET',
+      url: '/v1/orders',
+      headers: { authorization: `Bearer ${access_token}` },
+    })
     expect(list.statusCode).toBe(200)
   })
 })

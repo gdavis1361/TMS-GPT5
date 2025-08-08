@@ -15,13 +15,26 @@ describe('Customers', () => {
     await app.close()
   })
   it('list + create', async () => {
+    const email = `c${Date.now()}@example.com`
+    const password = 'Password123!'
+    const signup = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/signup',
+      payload: { email, password },
+    })
+    const { access_token } = signup.json() as any
     const create = await app.inject({
       method: 'POST',
       url: '/v1/customers',
+      headers: { authorization: `Bearer ${access_token}` },
       payload: { name: 'Acme Co' },
     })
     expect(create.statusCode).toBe(201)
-    const list = await app.inject({ method: 'GET', url: '/v1/customers' })
+    const list = await app.inject({
+      method: 'GET',
+      url: '/v1/customers',
+      headers: { authorization: `Bearer ${access_token}` },
+    })
     expect(list.statusCode).toBe(200)
   })
 })

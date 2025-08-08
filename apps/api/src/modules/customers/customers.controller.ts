@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
+import { AuthGuard } from '../auth/auth.guard'
 import { PrismaService } from '../../prisma/prisma.service'
 import { Prisma } from '@prisma/client'
 import { IsOptional, IsString } from 'class-validator'
@@ -27,18 +39,20 @@ class ListQueryDto {
   pageSize?: number = 25
 }
 
+@UseGuards(AuthGuard)
 @Controller({ path: 'customers', version: '1' })
 export class CustomersController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get()
-  async list(@Query() query: ListQueryDto) {
+  async list(@Req() req: any, @Query() query: ListQueryDto) {
     const page = Math.max(1, Number(query.page) || 1)
     const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 25))
     const mode = Prisma.QueryMode.insensitive
     const q = query.q
     const whereActive: Prisma.CustomerWhereInput = {
       AND: [
+        { ownerId: req.user.id },
         q
           ? {
               OR: [
@@ -64,19 +78,20 @@ export class CustomersController {
   }
 
   @Post()
-  async create(@Body() dto: UpsertCustomerDto) {
+  async create(@Req() req: any, @Body() dto: UpsertCustomerDto) {
     return this.prisma.customer.create({
-      data: { name: dto.name, email: dto.email, phone: dto.phone },
+      data: { ownerId: req.user.id, name: dto.name, email: dto.email, phone: dto.phone },
     })
   }
 
   @Get(':id')
-  async get(@Param('id') id: string) {
-    return this.prisma.customer.findUniqueOrThrow({ where: { id } })
+  async get(@Req() req: any, @Param('id') id: string) {
+    return this.prisma.customer.findFirstOrThrow({ where: { id, ownerId: req.user.id } })
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() dto: Partial<UpsertCustomerDto>) {
+  async update(@Req() req: any, @Param('id') id: string, @Body() dto: Partial<UpsertCustomerDto>) {
+    await this.prisma.customer.findFirstOrThrow({ where: { id, ownerId: req.user.id } })
     return this.prisma.customer.update({
       where: { id },
       data: { name: dto.name, email: dto.email, phone: dto.phone },
@@ -84,8 +99,11 @@ export class CustomersController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.prisma.customer.update({ where: { id }, data: { deletedAt: new Date() } })
+  async remove(@Req() req: any, @Param('id') id: string) {
+    await this.prisma.customer.update({
+      where: { id, ownerId: req.user.id } as any,
+      data: { deletedAt: new Date() },
+    })
     return { ok: true }
   }
 }

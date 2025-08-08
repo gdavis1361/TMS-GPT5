@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+  Req,
+} from '@nestjs/common'
+import { AuthGuard } from '../auth/auth.guard'
 import { PrismaService } from '../../prisma/prisma.service'
 import { Prisma } from '@prisma/client'
 import { IsOptional, IsString } from 'class-validator'
@@ -29,12 +41,13 @@ class ListQueryDto {
   pageSize?: number = 25
 }
 
+@UseGuards(AuthGuard)
 @Controller({ path: 'locations', version: '1' })
 export class LocationsController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get()
-  async list(@Query() query: ListQueryDto) {
+  async list(@Req() req: any, @Query() query: ListQueryDto) {
     const page = Math.max(1, Number(query.page) || 1)
     const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 25))
     const mode = Prisma.QueryMode.insensitive
