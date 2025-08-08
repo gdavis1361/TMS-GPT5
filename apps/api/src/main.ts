@@ -15,8 +15,7 @@ async function bootstrap() {
   const adapter = new FastifyAdapter({ logger: { level: 'info' } })
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter)
   await app.register(cors, { origin: true, credentials: true })
-  // Temporarily disabled due to version mismatch
-  // await adapter.register(rateLimit, { max: 100, timeWindow: '1 minute' })
+  await app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
 
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' })
   app.useGlobalPipes(

@@ -48,10 +48,11 @@ export class ContactsController {
           ],
         }
       : undefined
+    const whereActive: Prisma.ContactWhereInput = { AND: [where ?? {}, { deletedAt: null }] }
     const [total, items] = await Promise.all([
-      this.prisma.contact.count({ where }),
+      this.prisma.contact.count({ where: whereActive }),
       this.prisma.contact.findMany({
-        where,
+        where: whereActive,
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * pageSize,
         take: pageSize,
@@ -83,7 +84,7 @@ export class ContactsController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    await this.prisma.contact.delete({ where: { id } })
+    await this.prisma.contact.update({ where: { id }, data: { deletedAt: new Date() } })
     return { ok: true }
   }
 }

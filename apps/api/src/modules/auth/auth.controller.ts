@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { IsEmail, IsString, MinLength } from 'class-validator'
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator'
 
 class CredentialsDto {
   @IsEmail()
@@ -8,6 +8,9 @@ class CredentialsDto {
 
   @IsString()
   @MinLength(8)
+  @Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/, {
+    message: 'Password must include upper, lower, number, and symbol',
+  })
   password!: string
 }
 

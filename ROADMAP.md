@@ -85,7 +85,7 @@ This document is the single source of truth for the rebuild and modernization ef
 ## Phase 3 — AuthN/AuthZ
 
 - [x] Password hashing (Argon2id)
-- [ ] Password policy (min length/complexity)
+- [x] Password policy (min length/complexity)
 - [x] Login, refresh with rotation; revoke-all support
 - [ ] Logout endpoint wiring and device/session tracking
 - [x] RBAC: roles on user and route guards
@@ -115,7 +115,7 @@ This document is the single source of truth for the rebuild and modernization ef
 ## Phase 5 — Core domain APIs
 
 - [x] Contacts: CRUD, search, pagination
-- [ ] Contacts: soft-delete
+- [x] Contacts: soft-delete
 - [ ] Customers: CRUD, ownership, tags
 - [ ] Locations: CRUD, geo fields, validation
 - [ ] Orders: CRUD, status state machine, validation, pricing placeholders
