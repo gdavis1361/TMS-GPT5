@@ -18,14 +18,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
       errors = resp?.errors
     }
 
-    res.status(status).send({
-      ok: false,
-      statusCode: status,
-      message,
-      errors,
-      path: req.url,
-      requestId: res.getHeader('X-Request-Id'),
-      timestamp: new Date().toISOString(),
-    })
+    // RFC 7807 Problem Details
+    res
+      .status(status)
+      .type('application/problem+json')
+      .send({
+        type: 'about:blank',
+        title: message,
+        status,
+        detail: Array.isArray(errors) ? errors.join(', ') : errors,
+        instance: req.url,
+        requestId: res.getHeader('X-Request-Id'),
+        timestamp: new Date().toISOString(),
+      })
   }
 }

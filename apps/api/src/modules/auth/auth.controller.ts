@@ -20,6 +20,11 @@ class CredentialsDto {
   @IsString()
   @MinLength(6)
   totp?: string
+
+  @IsOptional()
+  @IsString()
+  @MinLength(8)
+  recoveryCode?: string
 }
 
 @Controller({ path: 'auth', version: '1' })
@@ -39,6 +44,7 @@ export class AuthController {
       dto.password,
       { ip: req.ip, userAgent: req.headers['user-agent'] },
       dto.totp,
+      dto.recoveryCode,
     )
   }
 
@@ -56,25 +62,25 @@ export class AuthController {
   }
 
   @Post('request-email-verification')
-  @Throttle({ default: { limit: 5, ttl: 300 } })
+  @Throttle({ default: { limit: 3, ttl: 300 } })
   requestEmailVerification(@Body() dto: { email: string }) {
     return this.auth.requestEmailVerification(dto.email)
   }
 
   @Post('verify-email')
-  @Throttle({ default: { limit: 5, ttl: 300 } })
+  @Throttle({ default: { limit: 3, ttl: 300 } })
   verifyEmail(@Body() dto: { email: string; token: string }) {
     return this.auth.verifyEmail(dto.email, dto.token)
   }
 
   @Post('request-password-reset')
-  @Throttle({ default: { limit: 5, ttl: 300 } })
+  @Throttle({ default: { limit: 3, ttl: 300 } })
   requestPasswordReset(@Body() dto: { email: string }) {
     return this.auth.requestPasswordReset(dto.email)
   }
 
   @Post('reset-password')
-  @Throttle({ default: { limit: 5, ttl: 300 } })
+  @Throttle({ default: { limit: 3, ttl: 300 } })
   resetPassword(@Body() dto: { email: string; token: string; newPassword: string }) {
     return this.auth.resetPassword(dto.email, dto.token, dto.newPassword)
   }
@@ -95,6 +101,12 @@ export class AuthController {
   @Post('mfa/setup')
   mfaSetup(@Req() req: any) {
     return this.auth.mfaSetup(req.user.id)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('mfa/recovery-codes')
+  generateRecovery(@Req() req: any) {
+    return this.auth.generateRecoveryCodes(req.user.id)
   }
 
   @UseGuards(AuthGuard)

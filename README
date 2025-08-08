@@ -29,3 +29,30 @@ CI
 
 Contributing
 - See CONTRIBUTING.md; conventional commits enforced via commitlint
+
+JWT signing (dev vs prod)
+-------------------------
+- Dev: HS256 with `JWT_SECRET` only (no key files). Default in docker-compose.
+- Prod/Staging (RS256): set PEMs via env/secret manager (no files in VCS):
+  - `JWT_PRIVATE_KEY`: RS256 private key (PEM)
+  - `JWT_PUBLIC_KEY`: RS256 public key (PEM)
+  - Optional: `JWT_ISSUER`, `JWT_AUDIENCE`, `JWT_KID`
+
+Key rotation (RS256)
+1. Generate new keypair (outside the repo):
+   openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out jwtRS256.key
+   openssl rsa -in jwtRS256.key -pubout -out jwtRS256.pub
+2. Update secret storage with new PEMs for the environment.
+3. If publishing JWKS, assign a new `kid` and keep the old key published until old tokens expire.
+4. Redeploy; then remove the old key from JWKS/secret store after the overlap window.
+
+Important: never commit keys. `apps/api/keys/*` is ignored; that folder contains only a README.
+
+RS256 local testing helpers
+---------------------------
+- Generate a keypair outside the repo:
+  - `make rs256-gen`
+- Export env variables into your shell:
+  - `eval "$(make rs256-env)"`
+- Bring up API with RS256 just for this run (Compose overrides env):
+  - `make rs256-up`

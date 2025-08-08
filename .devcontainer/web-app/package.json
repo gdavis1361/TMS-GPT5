@@ -6,33 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "api:gen": "openapi-typescript http://host.docker.internal:3001/docs-json --output src/api/schema.ts && node ./scripts/generate-client.cjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.1",
-    "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/postcss": "^4.1.11",
-    "@tanstack/react-query": "^5.84.2",
     "autoprefixer": "^10",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.539.0",
     "next": "14.2.5",
     "postcss": "^8",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-hook-form": "^7.62.0",
-    "sonner": "^2.0.7",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4",
-    "zod": "^4.0.15"
+    "tailwindcss": "^4"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "openapi-typescript": "^7.8.0",
     "typescript": "^5.5.4"
   }
 }

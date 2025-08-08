@@ -1,3 +1,8 @@
+# Security: never commit JWT keys
+apps/api/keys/jwtRS256.key
+apps/api/keys/jwtRS256.pub
+apps/api/keys/*.pem
+apps/api/keys/*
 node_modules/
 .next/
 .turbo/

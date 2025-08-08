@@ -31,6 +31,7 @@ export class AuthService {
     password: string,
     ctx?: { ip?: string; userAgent?: string },
     totp?: string,
+    recoveryCode?: string,
   ) {
     const user = await this.prisma.user.findUnique({ where: { email } })
     if (!user) throw new UnauthorizedException('Invalid credentials')
@@ -53,11 +54,14 @@ export class AuthService {
       where: { id: user.id },
       data: { failedLoginCount: 0, lockedUntil: null },
     })
-    // If MFA enabled, require valid TOTP code
+    // If MFA enabled, require valid TOTP code or a valid recovery code (one-time)
     if (user.mfaEnabled) {
-      if (!totp) throw new ForbiddenException('MFA code required')
-      const valid = authenticator.check(totp, user.mfaSecret || '')
-      if (!valid) {
+      let okMfa = false
+      if (totp) okMfa = authenticator.check(totp, user.mfaSecret || '')
+      if (!okMfa && recoveryCode) {
+        okMfa = await this.consumeRecoveryCode(user.id, recoveryCode)
+      }
+      if (!okMfa) {
         await this.log(user.id, 'auth.mfa_failed', {})
         throw new ForbiddenException('Invalid MFA code')
       }
@@ -67,7 +71,13 @@ export class AuthService {
   }
 
   private async issueTokens(userId: string, ctx?: { ip?: string; userAgent?: string }) {
-    const access_token = await this.jwt.signAsync({ sub: userId })
+    const now = Math.floor(Date.now() / 1000)
+    const access_token = await this.jwt.signAsync({ sub: userId }, {
+      notBefore: now - 60, // tolerate small clock skew
+      issuer: process.env.JWT_ISSUER,
+      audience: process.env.JWT_AUDIENCE,
+      header: { kid: process.env.JWT_KID, alg: 'RS256' },
+    })
     const tokenId = cryptoRandom(32)
     const refreshSecret = cryptoRandom(64)
     const refresh_token = `${tokenId}.${refreshSecret}`
@@ -101,7 +111,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token')
     }
     const ok = await argon2.verify(record.tokenHash, providedSecret)
-    if (!ok) throw new UnauthorizedException('Invalid refresh token')
+    if (!ok) {
+      // Reuse detection: if the provided secret is wrong for a still-valid token id,
+      // assume theft and revoke the entire session family
+      if (tokenId) {
+        await this.revokeFamily(userId, tokenId)
+      }
+      await this.log(userId, 'auth.refresh_reuse_detected', { tokenId })
+      throw new UnauthorizedException('Invalid refresh token')
+    }
     // rotate
     const nextId = cryptoRandom(32)
     const nextSecret = cryptoRandom(64)
@@ -122,7 +140,13 @@ export class AuthService {
         lastUsedAt: new Date(),
       },
     })
-    const access_token = await this.jwt.signAsync({ sub: userId })
+    const now = Math.floor(Date.now() / 1000)
+    const access_token = await this.jwt.signAsync({ sub: userId }, {
+      notBefore: now - 60,
+      issuer: process.env.JWT_ISSUER,
+      audience: process.env.JWT_AUDIENCE,
+      header: { kid: process.env.JWT_KID, alg: 'RS256' },
+    })
     await this.log(userId, 'auth.refresh', {})
     return { access_token, refresh_token: next }
   }
@@ -134,6 +158,39 @@ export class AuthService {
     })
     await this.log(userId, 'auth.logout_all', {})
     return { ok: true }
+  }
+
+  private async revokeFamily(userId: string, tokenId: string) {
+    // Revoke the current token and any chain using replacedBy linkage
+    await this.prisma.refreshToken.updateMany({
+      where: { userId, OR: [{ tokenId }, { replacedBy: tokenId }], revokedAt: null },
+      data: { revokedAt: new Date() },
+    })
+  }
+
+  private async consumeRecoveryCode(userId: string, code: string): Promise<boolean> {
+    // one-way hash input recovery code and compare with stored hashes
+    const hash = await argon2.hash(code, { type: argon2.argon2id })
+    const rec = await this.prisma.mfaRecoveryCode.findFirst({ where: { userId, usedAt: null } })
+    if (!rec) return false
+    const ok = await argon2.verify(rec.codeHash, code)
+    if (!ok) return false
+    await this.prisma.mfaRecoveryCode.update({ where: { id: rec.id }, data: { usedAt: new Date() } })
+    return true
+  }
+
+  async generateRecoveryCodes(userId: string) {
+    const codes: string[] = Array.from({ length: 10 }, () => cryptoRandom(12))
+    await this.prisma.$transaction(
+      codes.map((c) =>
+        this.prisma.mfaRecoveryCode.create({
+          data: { userId, codeHash: argon2.hash(c, { type: argon2.argon2id }) as unknown as string },
+        }),
+      ),
+    )
+    await this.log(userId, 'auth.mfa.recovery.regenerated', { count: codes.length })
+    // Return plaintext codes once for the user to store
+    return { codes }
   }
 
   async requestEmailVerification(email: string) {

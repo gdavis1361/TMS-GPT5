@@ -15,7 +15,16 @@ module.exports = {
     'prettier'
   ],
   settings: {
-    react: { version: 'detect' }
+    react: { version: 'detect' },
+    'import/resolver': {
+      typescript: {
+        project: [
+          './tsconfig.base.json',
+          './apps/*/tsconfig.json',
+          './packages/*/tsconfig.json',
+        ],
+      },
+    },
   },
   ignorePatterns: ['**/dist/**', '**/.next/**', '**/node_modules/**'],
   overrides: [

@@ -1,7 +1,15 @@
 {
   "name": "tms-modern",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
-  "features": {},
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "installDockerBuildx": true,
+      "moby": false
+    }
+  },
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
   "postCreateCommand": "npm ci",
   "customizations": {
     "vscode": {

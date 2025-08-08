@@ -45,9 +45,9 @@ This document is the single source of truth for the rebuild and modernization ef
   - [x] Remove stray Yarn lockfiles and ignore `yarn.lock` repo-wide
 - [x] CI hardening
   - [x] Use `npm ci` with caching instead of `npm install`
-  - [ ] Enforce `tsc --noEmit` typecheck across workspaces in CI
-  - [ ] Add `typecheck` scripts per workspace and a root aggregator
-  - [ ] Remove `|| true` so CI fails on type errors
+  - [x] Enforce `tsc --noEmit` typecheck across workspaces in CI
+  - [x] Add `typecheck` scripts per workspace and a root aggregator
+  - [x] Remove `|| true` so CI fails on type errors
   - [x] Add `prettier --check` gate
   - [x] Add test job placeholder (will be wired in Phase 9)
 - [x] Supply chain security
@@ -65,9 +65,9 @@ This document is the single source of truth for the rebuild and modernization ef
   - [x] Add `.nvmrc` to pin Node version
   - [x] Add `.devcontainer` for consistent local setup
   - [x] Root README (added to legacy README section)
-  - [ ] docker-compose API dev: run in watch mode and inject container-local env (avoid `node dist/main.js`)
+  - [x] docker-compose API dev: run in watch mode and inject container-local env (avoid `node dist/main.js`)
 - [ ] Branch protection and repo posture
-  - [ ] Branch protection: require status checks (lint, build, test), signed commits, linear history (repo settings)
+  - [x] Branch protection: require status checks (lint, typecheck, build, test), signed commits, linear history; dismiss stale reviews; require approvals
   - [x] OSSF Scorecard workflow enabled
 - [x] Container hardening
   - [x] Pin Docker base images by digest (replace tag-only images)
@@ -87,7 +87,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Request ID interceptor + basic request logging
 - [x] OpenAPI (Swagger at /docs); versioned API prefix
 - [x] Prisma hygiene: remove SQLite leftovers; keep Postgres-only migrations; add seed wiring
-- [ ] JWT/config: require `JWT_SECRET` (no defaults) and validate `DATABASE_URL`, SMTP vars
+ - [x] JWT/config: require `JWT_SECRET` (no defaults) and validate `DATABASE_URL`, SMTP vars
 
 ## Phase 3 — AuthN/AuthZ
 
@@ -103,6 +103,10 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Mailer integration: send signed links for verify/reset (no token echo outside tests)
 - [x] Session metadata and binding: store/validate ip and userAgent for refresh tokens
 - [x] Password history recorded on reset/change
+ - [x] JWT hardening: RS256 support with iss/aud/nbf; JWKS endpoint and kid header added; rotation plan pending
+ - [x] Refresh reuse detection + session family revoke implemented (server); sessions UI pending
+ - [x] MFA recovery codes implemented; step-up auth pending
+ - [ ] Anti-abuse: user+IP throttles, backoff, temporary bans
 
 ## Phase 4 — Frontend foundation (Next.js)
 
@@ -116,6 +120,29 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Tailwind v4 PostCSS setup (`@tailwindcss/postcss`); npm-only lockfile enforced
 - [ ] CSP (nonce-based) with strict script-src and style-src once routes/assets are finalized
 - [ ] Fix type dependencies for React 18: `@types/react@18`, `@types/react-dom@18`, `@types/node`
+
+### Phase 4.1 — Immediate FE/BE hygiene (new)
+- [ ] shadcn/ui install + tokens; only shadcn/ui components in `web`
+- [ ] API client: generate types from OpenAPI and add fetch wrapper
+- [ ] Error boundary and toast provider in `web` (sonner wired) — baseline done
+- [ ] Strict CORS origin list per env (no `origin: true`)
+- [ ] pino redaction: `authorization`, `cookie`, `set-cookie`, `password`, `token`, PII
+- [ ] Soft-delete default scopes via Prisma middleware
+- [ ] Email case normalization: use CITEXT or functional unique indexes
+
+### Phase 1.5 — Repo and CI corrections (new)
+- [ ] Secrets hygiene: remove committed JWT keys from history; rotate; `.gitignore` sample keys
+- [ ] Compose key injection: use `${file:...}` or env-only secrets; remove `$${file:...}`
+- [ ] Trivy/CI builds: build from repo root with `-f apps/*/Dockerfile`
+- [ ] ESLint TS path resolver configured for monorepo
+- [ ] Container slimming: install runtime with `--omit=dev` or prune dev deps in final stage
+- [ ] Next.js headers: add COOP/COEP/CORP, X-DNS-Prefetch-Control as appropriate
+- [ ] Legacy footprint: move legacy PHP into `/legacy` and mark linguist-vendored, exclude from CI
+- [ ] README split: `README.md` (modern app) and `LEGACY.md` (PHP notes)
+
+### Database and performance (new)
+- [ ] Connection pooling/timeouts plan (PgBouncer or Prisma pool limits + `statement_timeout`)
+- [ ] Idempotent, tiered seeds; forbid prod seeds by default
 
 ### Immediate next steps
 
@@ -162,6 +189,8 @@ This document is the single source of truth for the rebuild and modernization ef
 ## Phase 7 — Observability and ops
 
 - [ ] OpenTelemetry tracing + logs + metrics (API + web)
+- [x] Structured HTTP logging with pino (baseline)
+- [x] Basic Prometheus `/metrics` placeholder endpoint
 - [ ] Prometheus scrape + Grafana dashboards (latency, error rate, saturation)
 - [ ] Sentry for FE/BE errors
 - [x] Health endpoints, readiness/liveness probes
