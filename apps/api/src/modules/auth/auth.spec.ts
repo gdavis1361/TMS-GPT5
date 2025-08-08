@@ -34,4 +34,54 @@ describe('Auth', () => {
     })
     expect(login.statusCode).toBe(201)
   })
+
+  it('email verification flow', async () => {
+    const email = `v${Date.now()}@example.com`
+    const password = 'Password123!'
+    // signup
+    await app.inject({ method: 'POST', url: '/v1/auth/signup', payload: { email, password } })
+    // request token
+    const reqTok = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/request-email-verification',
+      payload: { email },
+    })
+    expect(reqTok.statusCode).toBe(201)
+    const token = (reqTok.json() as any).token
+    expect(token).toBeTruthy()
+    // verify
+    const verify = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/verify-email',
+      payload: { email, token },
+    })
+    expect(verify.statusCode).toBe(201)
+  })
+
+  it('password reset flow', async () => {
+    const email = `r${Date.now()}@example.com`
+    const password = 'Password123!'
+    await app.inject({ method: 'POST', url: '/v1/auth/signup', payload: { email, password } })
+    const req = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/request-password-reset',
+      payload: { email },
+    })
+    expect(req.statusCode).toBe(201)
+    const token = (req.json() as any).token
+    const nextPass = 'NewPass123!'
+    const reset = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/reset-password',
+      payload: { email, token, newPassword: nextPass },
+    })
+    expect(reset.statusCode).toBe(201)
+    // old refresh should be revoked; just ensure login with new password works
+    const login = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/login',
+      payload: { email, password: nextPass },
+    })
+    expect(login.statusCode).toBe(201)
+  })
 })
