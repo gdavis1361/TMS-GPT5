@@ -5,7 +5,6 @@ loadEnv({ path: join(__dirname, '..', '.env') })
 import { NestFactory } from '@nestjs/core'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 import cors from '@fastify/cors'
-import rateLimit from '@fastify/rate-limit'
 import { AppModule } from './modules/app.module'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ValidationPipe, VersioningType } from '@nestjs/common'
@@ -15,7 +14,7 @@ async function bootstrap() {
   const adapter = new FastifyAdapter({ logger: { level: 'info' } })
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter)
   await app.register(cors, { origin: true, credentials: true })
-  await app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
+  // Consider enabling @nestjs/throttler per-route instead of Fastify rate-limit to avoid duplicate limiting
 
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' })
   app.useGlobalPipes(

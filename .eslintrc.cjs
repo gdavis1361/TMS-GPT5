@@ -20,7 +20,7 @@ module.exports = {
   ignorePatterns: ['**/dist/**', '**/.next/**', '**/node_modules/**'],
   overrides: [
     {
-      files: ['**/*.config.js'],
+      files: ['**/*.config.{js,cjs}', '**/*.config.*.cjs'],
       env: { node: true },
       rules: { 'no-undef': 'off' },
     },

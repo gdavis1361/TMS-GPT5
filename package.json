@@ -13,6 +13,7 @@
     "build": "npm run build -w @tms/types && npm run build -w @tms/config && npm run build -w @tms/ui && npm run build -w @tms/api && npm run build -w @tms/web",
     "typecheck": "npm run -w @tms/types typecheck && npm run -w @tms/config typecheck && npm run -w @tms/ui typecheck && npm run -w @tms/api typecheck && npm run -w @tms/web typecheck",
     "lint": "eslint . --ext .ts,.tsx,.js,.cjs --max-warnings=0",
+    "db:seed": "npm run -w @tms/api seed",
     "format": "prettier --write .",
     "prepare": "husky install",
     "commitlint": "commitlint --from=origin/main --to=HEAD",

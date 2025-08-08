@@ -86,7 +86,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Error handling middleware/filters
 - [x] Request ID interceptor + basic request logging
 - [x] OpenAPI (Swagger at /docs); versioned API prefix
-- [ ] Prisma hygiene: remove SQLite leftovers; keep Postgres-only migrations; add seed wiring
+- [x] Prisma hygiene: remove SQLite leftovers; keep Postgres-only migrations; add seed wiring
 - [ ] JWT/config: require `JWT_SECRET` (no defaults) and validate `DATABASE_URL`, SMTP vars
 
 ## Phase 3 — AuthN/AuthZ
