@@ -4,6 +4,7 @@ import { INestApplication, VersioningType } from '@nestjs/common'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 import { PrismaService } from '../../prisma/prisma.service'
 import request from 'supertest'
+import { authenticator } from 'otplib'
 
 describe('Auth', () => {
   let app: NestFastifyApplication
@@ -243,5 +244,66 @@ describe('Auth', () => {
       payload: { email, password },
     })
     expect(locked.statusCode).toBe(401)
+  })
+
+  it('MFA: setup, verify, require TOTP on login, then disable', async () => {
+    const email = `mfa${Date.now()}@example.com`
+    const password = 'Password123!'
+    // signup -> tokens
+    const signup = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/signup',
+      payload: { email, password },
+    })
+    expect(signup.statusCode).toBe(201)
+    const tokens = signup.json() as any
+    // setup
+    const setup = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/mfa/setup',
+      headers: { authorization: `Bearer ${tokens.access_token}` },
+    })
+    expect(setup.statusCode).toBe(201)
+    const secret = (setup.json() as any).secret as string
+    expect(secret).toBeTruthy()
+    // verify
+    const code = authenticator.generate(secret)
+    const verify = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/mfa/verify',
+      headers: { authorization: `Bearer ${tokens.access_token}` },
+      payload: { code },
+    })
+    expect(verify.statusCode).toBe(201)
+    // login without totp should fail
+    const noTotp = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/login',
+      payload: { email, password },
+    })
+    expect(noTotp.statusCode).toBe(403)
+    // login with totp should succeed
+    const withTotp = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/login',
+      payload: { email, password, totp: authenticator.generate(secret) },
+    })
+    expect(withTotp.statusCode).toBe(201)
+    const newTokens = withTotp.json() as any
+    // disable MFA
+    const disable = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/mfa/disable',
+      headers: { authorization: `Bearer ${newTokens.access_token}` },
+      payload: { code: authenticator.generate(secret) },
+    })
+    expect(disable.statusCode).toBe(201)
+    // login without totp should now succeed
+    const backToNormal = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/login',
+      payload: { email, password },
+    })
+    expect(backToNormal.statusCode).toBe(201)
   })
 })
