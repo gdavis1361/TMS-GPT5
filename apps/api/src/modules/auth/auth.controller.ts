@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { IsEmail, IsString, Matches, MinLength } from 'class-validator'
+import { IsEmail, IsOptional, IsString, Matches, MinLength } from 'class-validator'
 import { UseGuards, Get, Req } from '@nestjs/common'
 import { Throttle } from '@nestjs/throttler'
 import { AuthGuard } from './auth.guard'
@@ -15,6 +15,11 @@ class CredentialsDto {
     message: 'Password must include upper, lower, number, and symbol',
   })
   password!: string
+
+  @IsOptional()
+  @IsString()
+  @MinLength(6)
+  totp?: string
 }
 
 @Controller({ path: 'auth', version: '1' })
@@ -28,13 +33,21 @@ export class AuthController {
 
   @Post('login')
   @Throttle({ default: { limit: 5, ttl: 60 } })
-  login(@Body() dto: CredentialsDto) {
-    return this.auth.login(dto.email, dto.password)
+  login(@Req() req: any, @Body() dto: CredentialsDto) {
+    return this.auth.login(
+      dto.email,
+      dto.password,
+      { ip: req.ip, userAgent: req.headers['user-agent'] },
+      dto.totp,
+    )
   }
 
   @Post('refresh')
-  refresh(@Body() dto: { userId: string; refresh_token: string }) {
-    return this.auth.refresh(dto.userId, dto.refresh_token)
+  refresh(@Req() req: any, @Body() dto: { userId: string; refresh_token: string }) {
+    return this.auth.refresh(dto.userId, dto.refresh_token, {
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    })
   }
 
   @Post('logout')
@@ -76,5 +89,23 @@ export class AuthController {
   @Post('revoke')
   revoke(@Req() req: any, @Body() dto: { tokenId: string }) {
     return this.auth.revokeOne(req.user.id, dto.tokenId)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('mfa/setup')
+  mfaSetup(@Req() req: any) {
+    return this.auth.mfaSetup(req.user.id)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('mfa/verify')
+  mfaVerify(@Req() req: any, @Body() dto: { code: string }) {
+    return this.auth.mfaVerify(req.user.id, dto.code)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('mfa/disable')
+  mfaDisable(@Req() req: any, @Body() dto: { code: string }) {
+    return this.auth.mfaDisable(req.user.id, dto.code)
   }
 }

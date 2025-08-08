@@ -92,6 +92,10 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Email verification, password reset (single-use token + expiry)
 - [x] CSRF (if cookie-based), rate limiting, brute-force protection
 - [x] Audit log for auth events
+- [x] MFA (TOTP) with setup/verify/disable; enforce TOTP at login when enabled
+- [x] Mailer integration: send signed links for verify/reset (no token echo outside tests)
+- [x] Session metadata and binding: store/validate ip and userAgent for refresh tokens
+- [x] Password history recorded on reset/change
 
 ## Phase 4 — Frontend foundation (Next.js)
 
@@ -116,10 +120,22 @@ This document is the single source of truth for the rebuild and modernization ef
 
 - [x] Contacts: CRUD, search, pagination
 - [x] Contacts: soft-delete
-- [ ] Customers: CRUD, ownership, tags
-- [ ] Locations: CRUD, geo fields, validation
-- [ ] Orders: CRUD, status state machine, validation, pricing placeholders
-- [ ] Documents: signed upload/download URLs, metadata, preview
+- Customers
+  - [x] CRUD
+  - [x] Ownership
+  - [ ] Tags
+- Locations
+  - [x] CRUD
+  - [x] Ownership
+  - [ ] Geo fields and validation
+- Orders
+  - [x] CRUD
+  - [x] Ownership
+  - [ ] Status state machine, validation, pricing placeholders
+- Documents
+  - [x] CRUD
+  - [x] Ownership
+  - [ ] Signed upload/download URLs, metadata, preview
 - [ ] Webhooks/events (internal pub/sub for side effects)
 
 ## Phase 6 — Core UI screens (shadcn/ui only)
@@ -194,7 +210,7 @@ This document is the single source of truth for the rebuild and modernization ef
 
 - [ ] Monorepo with `web` (Next.js) and `api` (NestJS), CI/CD
 - [x] Postgres schema + Prisma migrations
-- [x] Auth with JWT rotation, Argon2id, RBAC (password reset pending)
+- [x] Auth with JWT rotation, Argon2id, RBAC, email verification + password reset, MFA (TOTP)
 - [ ] v1 domain APIs (contacts, customers, orders, locations, documents)
 - [ ] v1 UI built with shadcn/ui + Tailwind v4 only
 - [ ] Observability (OTel, Sentry, Grafana), security headers, rate limiting

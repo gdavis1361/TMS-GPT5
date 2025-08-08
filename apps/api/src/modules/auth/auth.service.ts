@@ -1,14 +1,22 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common'
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common'
 import { PrismaService } from '../../prisma/prisma.service'
 import * as argon2 from 'argon2'
 import { JwtService } from '@nestjs/jwt'
 import { add } from 'date-fns'
+import { MailService } from '../../shared/mail.service'
+import { authenticator } from 'otplib'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
+    private readonly mail: MailService,
   ) {}
 
   async signup(email: string, password: string) {
@@ -18,7 +26,12 @@ export class AuthService {
     return this.issueTokens(user.id)
   }
 
-  async login(email: string, password: string) {
+  async login(
+    email: string,
+    password: string,
+    ctx?: { ip?: string; userAgent?: string },
+    totp?: string,
+  ) {
     const user = await this.prisma.user.findUnique({ where: { email } })
     if (!user) throw new UnauthorizedException('Invalid credentials')
     if (user.lockedUntil && user.lockedUntil > new Date()) {
@@ -40,11 +53,20 @@ export class AuthService {
       where: { id: user.id },
       data: { failedLoginCount: 0, lockedUntil: null },
     })
-    await this.log(user.id, 'auth.login', {})
-    return this.issueTokens(user.id)
+    // If MFA enabled, require valid TOTP code
+    if (user.mfaEnabled) {
+      if (!totp) throw new ForbiddenException('MFA code required')
+      const valid = authenticator.check(totp, user.mfaSecret || '')
+      if (!valid) {
+        await this.log(user.id, 'auth.mfa_failed', {})
+        throw new ForbiddenException('Invalid MFA code')
+      }
+    }
+    await this.log(user.id, 'auth.login', { mfa: user.mfaEnabled === true })
+    return this.issueTokens(user.id, ctx)
   }
 
-  private async issueTokens(userId: string) {
+  private async issueTokens(userId: string, ctx?: { ip?: string; userAgent?: string }) {
     const access_token = await this.jwt.signAsync({ sub: userId })
     const tokenId = cryptoRandom(32)
     const refreshSecret = cryptoRandom(64)
@@ -56,19 +78,28 @@ export class AuthService {
         tokenId,
         tokenHash,
         expiresAt: add(new Date(), { days: 7 }),
+        ip: ctx?.ip,
+        userAgent: ctx?.userAgent,
+        lastUsedAt: new Date(),
       },
     })
     await this.log(userId, 'auth.issue_tokens', {})
     return { access_token, refresh_token }
   }
 
-  async refresh(userId: string, refresh_token: string) {
+  async refresh(userId: string, refresh_token: string, ctx?: { ip?: string; userAgent?: string }) {
     const [tokenId, providedSecret] = refresh_token.split('.')
     const record = await this.prisma.refreshToken.findFirst({
       where: { userId, tokenId, revokedAt: null, expiresAt: { gt: new Date() } },
     })
     if (!record) throw new UnauthorizedException('Invalid refresh token')
     if (!providedSecret) throw new UnauthorizedException('Invalid refresh token')
+    if (record.userAgent && ctx?.userAgent && record.userAgent !== ctx.userAgent) {
+      throw new UnauthorizedException('Invalid refresh token')
+    }
+    if (record.ip && ctx?.ip && record.ip !== ctx.ip) {
+      throw new UnauthorizedException('Invalid refresh token')
+    }
     const ok = await argon2.verify(record.tokenHash, providedSecret)
     if (!ok) throw new UnauthorizedException('Invalid refresh token')
     // rotate
@@ -86,6 +117,9 @@ export class AuthService {
         tokenId: nextId,
         tokenHash: nextHash,
         expiresAt: add(new Date(), { days: 7 }),
+        ip: ctx?.ip,
+        userAgent: ctx?.userAgent,
+        lastUsedAt: new Date(),
       },
     })
     const access_token = await this.jwt.signAsync({ sub: userId })
@@ -113,7 +147,10 @@ export class AuthService {
       data: { userId: user.id, tokenId, tokenHash, expiresAt: add(new Date(), { hours: 24 }) },
     })
     await this.log(user.id, 'auth.verify_email.request', {})
-    return { ok: true, token }
+    const link = `${process.env.PUBLIC_URL || 'http://localhost:3001'}/v1/auth/verify-email?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`
+    await this.mail.sendVerificationEmail(email, link)
+    // In tests, return token to allow assertions
+    return process.env.NODE_ENV === 'test' ? { ok: true, token } : { ok: true }
   }
 
   async verifyEmail(email: string, token: string) {
@@ -148,7 +185,9 @@ export class AuthService {
       data: { userId: user.id, tokenId, tokenHash, expiresAt: add(new Date(), { hours: 2 }) },
     })
     await this.log(user.id, 'auth.reset_password.request', {})
-    return { ok: true, token }
+    const link = `${process.env.PUBLIC_URL || 'http://localhost:3001'}/v1/auth/reset-password?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`
+    await this.mail.sendPasswordResetEmail(email, link)
+    return process.env.NODE_ENV === 'test' ? { ok: true, token } : { ok: true }
   }
 
   async resetPassword(email: string, token: string, newPassword: string) {
@@ -181,6 +220,39 @@ export class AuthService {
     await this.prisma.auditLog.create({
       data: { userId: userId ?? undefined, event, metadata: metadata as any },
     })
+  }
+
+  async mfaSetup(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } })
+    if (!user) throw new BadRequestException('User not found')
+    const secret = authenticator.generateSecret()
+    await this.prisma.user.update({ where: { id: userId }, data: { mfaSecret: secret } })
+    const otpauth = authenticator.keyuri(user.email, 'TMS', secret)
+    await this.log(userId, 'auth.mfa.setup', {})
+    return { secret, otpauth }
+  }
+
+  async mfaVerify(userId: string, code: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } })
+    if (!user?.mfaSecret) throw new BadRequestException('No MFA setup')
+    const ok = authenticator.check(code, user.mfaSecret)
+    if (!ok) throw new BadRequestException('Invalid code')
+    await this.prisma.user.update({ where: { id: userId }, data: { mfaEnabled: true } })
+    await this.log(userId, 'auth.mfa.enabled', {})
+    return { ok: true }
+  }
+
+  async mfaDisable(userId: string, code: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } })
+    if (!user?.mfaSecret || !user.mfaEnabled) throw new BadRequestException('MFA not enabled')
+    const ok = authenticator.check(code, user.mfaSecret)
+    if (!ok) throw new BadRequestException('Invalid code')
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { mfaEnabled: false, mfaSecret: null },
+    })
+    await this.log(userId, 'auth.mfa.disabled', {})
+    return { ok: true }
   }
 
   async listSessions(userId: string) {

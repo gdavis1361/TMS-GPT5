@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { RequestIdInterceptor } from '../shared/request-id.interceptor'
+import { MailService } from '../shared/mail.service'
 import { ContactsModule } from './contacts/contacts.module'
 import { CustomersModule } from './customers/customers.module'
 import { LocationsModule } from './locations/locations.module'
@@ -44,6 +45,7 @@ import { AuthModule } from './auth/auth.module'
       provide: APP_INTERCEPTOR,
       useClass: RequestIdInterceptor,
     },
+    MailService,
   ],
 })
 export class AppModule {}
