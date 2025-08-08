@@ -21,7 +21,7 @@ jobs:
         with:
           image-ref: tms-api:ci
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
       - name: Run Trivy on Web image
@@ -29,7 +29,7 @@ jobs:
         with:
           image-ref: tms-web:ci
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
 

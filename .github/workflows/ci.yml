@@ -26,5 +26,15 @@ jobs:
       - name: Security audit (npm)
         run: npm audit --workspaces --include-workspace-root --audit-level=high
       # License check can be added later once policy is defined
-      # SBOM step to be added once a compatible generator for Node 22 is selected
+      - name: Generate SBOM (Syft CycloneDX JSON)
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: sbom.cdx.json
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cdx.json
 

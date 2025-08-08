@@ -3,11 +3,13 @@
 This document is the single source of truth for the rebuild and modernization effort. Update checkboxes as tasks complete. Keep sections concise and living.
 
 ### Project principles
+
 - [ ] Keep it simple, fast, testable
 - [ ] Prioritize clarity over cleverness
 - [ ] Security, observability, performance by default
 
 ## Phase 0 — Scope and decisions
+
 - [ ] Define core domain: contacts, customers, carriers, locations, orders, documents, users/roles
 - [ ] Prioritize v1 features: login, dashboard, contacts, customers, orders, documents
 - [ ] Choose tech stack
@@ -23,6 +25,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Domain language and module boundaries defined
 
 ## Phase 1 — Repo, dev env, CI/CD
+
 - [x] Monorepo scaffolding (apps: `web`, `api`; packages: `ui`, `config`, `types`)
 - [x] Dockerized dev (Next.js, NestJS, Postgres, Redis, MinIO, Mailpit)
   - [x] docker-compose with services and volumes
@@ -34,9 +37,10 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Dependency update policies (Dependabot + security scanning)
 
 ### Phase 1 — Enterprise-grade baselines
+
 - [ ] Package manager policy
   - [x] Choose and enforce npm across repo (.npmrc, engines)
-  - [ ] Commit a single lockfile at root; enforce in CI
+  - [x] Commit a single lockfile at root; enforce in CI
 - [x] CI hardening
   - [x] Use `npm ci` with caching instead of `npm install`
   - [x] Add `tsc --noEmit` typecheck across workspaces
@@ -44,9 +48,9 @@ This document is the single source of truth for the rebuild and modernization ef
   - [x] Add test job placeholder (will be wired in Phase 9)
 - [x] Supply chain security
   - [x] Container/image scanning (Trivy) for `apps/web` and `apps/api` images in CI
-  - [x] Generate SBOM (CycloneDX) and publish as CI artifact
-  - [ ] Enable GitHub secret scanning and push protection
-  - [ ] Add LICENSE file and dependency license checks
+  - [ ] SBOM generation in CI (Syft/Anchore) with artifact upload
+  - [x] Enable GitHub secret scanning and push protection (repo settings)
+  - [x] Add LICENSE file
 - [x] Governance and policies
   - [x] Add `CODEOWNERS`
   - [x] Add `SECURITY.md` (reporting, disclosure, support window)
@@ -57,25 +61,40 @@ This document is the single source of truth for the rebuild and modernization ef
   - [x] Add `.nvmrc` to pin Node version
   - [x] Add `.devcontainer` for consistent local setup
   - [x] Root README (added to legacy README section)
+- [ ] Branch protection and repo posture
+  - [ ] Branch protection: require status checks (lint, build, test), signed commits, linear history (repo settings)
+  - [x] OSSF Scorecard workflow enabled
+- [x] Container hardening
+  - [x] Pin Docker base images by digest (replace tag-only images)
 
 ## Phase 2 — Backend foundation (NestJS)
-- [ ] Bootstrap NestJS (Fastify)
-- [ ] Global config, env validation (zod/class-validator)
-- [ ] Add Prisma to project and configure Postgres connection
+
+- [x] Bootstrap NestJS (Fastify)
+- [x] Global config + env validation (ConfigModule + Joi)
+- [x] Add Prisma Postgres connection (local Postgres 16)
 - [ ] Prisma schema: users, roles, sessions/tokens, contacts, customers, orders, locations, documents
-- [ ] DB migrations pipeline
-- [ ] Error handling, logging, request-id middleware
-- [ ] OpenAPI (Swagger), versioned API (v1)
+  - [x] `User` model
+  - [x] `Role` enum and RBAC field on user
+  - [x] `RefreshToken` model (sessions/tokens)
+  - [x] `Contact` model
+- [x] DB migrations pipeline (Prisma migrate dev)
+- [x] Error handling middleware/filters
+- [x] Request ID interceptor + basic request logging
+- [x] OpenAPI (Swagger at /docs); versioned API prefix
 
 ## Phase 3 — AuthN/AuthZ
-- [ ] Password hashing (Argon2id), password policy
-- [ ] Login/logout, refresh, rotation, revocation, device/session tracking
-- [ ] RBAC: roles, permissions, route guards
+
+- [x] Password hashing (Argon2id)
+- [ ] Password policy (min length/complexity)
+- [x] Login, refresh with rotation; revoke-all support
+- [ ] Logout endpoint wiring and device/session tracking
+- [x] RBAC: roles on user and route guards
 - [ ] Email verification, password reset (single-use token + expiry)
 - [ ] CSRF (if cookie-based), rate limiting, brute-force protection
 - [ ] Audit log for auth events
 
 ## Phase 4 — Frontend foundation (Next.js)
+
 - [ ] App Router, TypeScript strict, Tailwind CSS v4 configured
   - [x] Tailwind v4 base config wired to app
   - [ ] Install shadcn/ui and set up theme tokens
@@ -83,17 +102,20 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Routing, layout shells, protected routes
 - [ ] Data layer: TanStack Query + typed client + error boundaries
 - [ ] Forms: React Hook Form + zod resolver
- - [ ] CSP (nonce-based) with strict script-src and style-src once routes/assets are finalized
-  
+- [ ] CSP (nonce-based) with strict script-src and style-src once routes/assets are finalized
+
 ### Immediate next steps
-- [ ] Install and initialize Prisma in `apps/api`; create initial schema and migration
-- [ ] Wire `.env` for Postgres and run migration in dev
+
+- [x] Install and initialize Prisma in `apps/api`; create initial schema and migration
+- [x] Wire `.env` for Postgres and run migration in dev
 - [ ] Install shadcn/ui in `apps/web`; generate base components and theme
 - [ ] Add initial auth pages (sign-in, reset password) using shadcn/ui
-- [ ] Add CI skeleton (GitHub Actions) for install → typecheck → lint → build
+- [x] Add CI skeleton (GitHub Actions) for install → typecheck → lint → build
 
 ## Phase 5 — Core domain APIs
-- [ ] Contacts: CRUD, search, pagination, soft-delete
+
+- [x] Contacts: CRUD, search, pagination
+- [ ] Contacts: soft-delete
 - [ ] Customers: CRUD, ownership, tags
 - [ ] Locations: CRUD, geo fields, validation
 - [ ] Orders: CRUD, status state machine, validation, pricing placeholders
@@ -101,6 +123,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Webhooks/events (internal pub/sub for side effects)
 
 ## Phase 6 — Core UI screens (shadcn/ui only)
+
 - [ ] Auth: sign-in, reset password, session management
 - [ ] Dashboard: KPIs, recent activity
 - [ ] Contacts: list, filters, detail, edit
@@ -111,32 +134,36 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Accessibility pass (keyboard, contrast, ARIA)
 
 ## Phase 7 — Observability and ops
+
 - [ ] OpenTelemetry tracing + logs + metrics (API + web)
 - [ ] Prometheus scrape + Grafana dashboards (latency, error rate, saturation)
 - [ ] Sentry for FE/BE errors
-- [ ] Health endpoints, readiness/liveness probes
+- [x] Health endpoints, readiness/liveness probes
 - [ ] Structured audit logging for critical events
- - [ ] Define SLOs (availability, latency p95/p99) and alerting thresholds
- - [ ] Synthetic monitoring for key user journeys
+- [ ] Define SLOs (availability, latency p95/p99) and alerting thresholds
+- [ ] Synthetic monitoring for key user journeys
 
 ## Phase 8 — Security hardening
+
 - [ ] Content Security Policy (nonce-based), HSTS, XFO, Referrer-Policy, Permissions-Policy
 - [ ] Input validation on all endpoints, output encoding in UI
 - [ ] Rate limiting and abuse protection on public endpoints
 - [ ] Secrets: runtime env only, rotation policy, no secrets in VCS
 - [ ] Dependency scanning + patch cadence
 - [ ] Backup/restore and disaster recovery drills
- - [ ] DAST (dynamic app security testing) against staging
+- [ ] DAST (dynamic app security testing) against staging
 
 ## Phase 9 — Testing strategy
+
 - [ ] Unit tests: services, helpers, domain logic
 - [ ] Integration tests: Prisma + API modules (test DB)
 - [ ] Contract tests for external services (if added)
 - [ ] E2E tests: Playwright critical paths
 - [ ] Load test baselines; regression alerts on p95/p99
- - [ ] Coverage thresholds in CI (enforced min %)
+- [ ] Coverage thresholds in CI (enforced min %)
 
 ## Phase 10 — Performance and resilience
+
 - [ ] N+1 and hot-path profiling; indexes, query budgets
 - [ ] Caching strategy (Redis) for hot queries
 - [ ] Background jobs & retries; idempotency keys
@@ -144,26 +171,30 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Chaos drills (latency, faults) in staging
 
 ## Phase 11 — Data import/export (optional)
+
 - [ ] CSV or API importers with validation
 - [ ] Export flows for reporting
 - [ ] Data ownership and retention policies
 
 ## Phase 12 — Documentation and handoff
+
 - [ ] Architecture decision records (ADRs)
 - [ ] Dev onboarding guide
 - [ ] Runbooks for incidents
 - [ ] API reference and UI usage patterns
 
 ## Phase 13 — Release and post-launch
+
 - [ ] Release checklist: migrations, seed data, feature flags
 - [ ] Canary/blue-green deploy
 - [ ] Post-launch monitoring SLOs and alerts
 - [ ] Stabilization sprint and backlog grooming
 
 ### Deliverables checklist (high level)
+
 - [ ] Monorepo with `web` (Next.js) and `api` (NestJS), CI/CD
-- [ ] Postgres schema + Prisma migrations
-- [ ] Auth with JWT rotation, Argon2id, RBAC, password reset
+- [x] Postgres schema + Prisma migrations
+- [x] Auth with JWT rotation, Argon2id, RBAC (password reset pending)
 - [ ] v1 domain APIs (contacts, customers, orders, locations, documents)
 - [ ] v1 UI built with shadcn/ui + Tailwind v4 only
 - [ ] Observability (OTel, Sentry, Grafana), security headers, rate limiting
@@ -171,6 +202,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Docs, runbooks, ADRs
 
 ### Nice-to-haves (future)
+
 - [ ] Feature flags (e.g., Unleash)
 - [ ] Search with Postgres FTS or OpenSearch
 - [ ] Multi-tenant support
@@ -178,8 +210,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] PWA enhancements
 
 ### Notes for contributors
+
 - Use short, imperative commit messages per checkbox (e.g., "Phase 3: add Argon2id hashing").
 - Keep PRs small and scoped to a checklist item.
 - Update this file in each PR that completes a task.
-
-

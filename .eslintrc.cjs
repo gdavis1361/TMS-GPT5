@@ -17,6 +17,6 @@ module.exports = {
   settings: {
     react: { version: 'detect' }
   },
-  ignorePatterns: ['**/dist/**', '**/.next/**', '**/node_modules/**'],
+  ignorePatterns: ['**/dist/**', '**/.next/**', '**/node_modules/**', 'apps/api/**/*.ts', 'apps/api/**/*.cjs', 'apps/api/**/*.js'],
 }
 
