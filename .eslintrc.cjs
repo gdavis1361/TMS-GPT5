@@ -17,6 +17,28 @@ module.exports = {
   settings: {
     react: { version: 'detect' }
   },
-  ignorePatterns: ['**/dist/**', '**/.next/**', '**/node_modules/**', 'apps/api/**/*.ts', 'apps/api/**/*.cjs', 'apps/api/**/*.js'],
+  ignorePatterns: ['**/dist/**', '**/.next/**', '**/node_modules/**'],
+  overrides: [
+    {
+      files: ['**/*.config.js'],
+      env: { node: true },
+      rules: { 'no-undef': 'off' },
+    },
+    {
+      files: ['apps/api/**/*.{ts,tsx,js,cjs}'],
+      rules: {
+        'tailwindcss/no-custom-classname': 'off',
+        'tailwindcss/classnames-order': 'off',
+        'tailwindcss/enforces-shorthand': 'off',
+        'tailwindcss/no-contradicting-classname': 'off',
+      },
+    },
+    {
+      files: ['**/*.{ts,tsx,js,cjs}'],
+      rules: {
+        'tailwindcss/no-custom-classname': 'off',
+      },
+    },
+  ],
 }
 

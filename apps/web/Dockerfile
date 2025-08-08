@@ -1,6 +1,6 @@
-FROM node:20-alpine@sha256:9a476f1a901b7b6e9b4d4d1c7c7e8d73c8f38ac2f9f3a3d9b6f0d2c1f1a2b3c4
+FROM node:20-alpine@sha256:df02558528d3d3d0d621f112e232611aecfee7cbc654f6b375765f72bb262799
 WORKDIR /app
-COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
+COPY package.json package-lock.json* ./
 RUN npm i --silent || true
 COPY . .
 EXPOSE 3000

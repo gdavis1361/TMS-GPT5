@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
-import { APP_GUARD } from '@nestjs/core'
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { AppController } from '../routes/app.controller'
 import { SecurityHeadersGuard } from '../security/security-headers.guard'
 import { PrismaService } from '../prisma/prisma.service'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
-import { APP_INTERCEPTOR } from '@nestjs/core'
 import { RequestIdInterceptor } from '../shared/request-id.interceptor'
 import { MailService } from '../shared/mail.service'
 import { ContactsModule } from './contacts/contacts.module'
@@ -24,6 +23,10 @@ import { AuthModule } from './auth/auth.module'
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
         PORT: Joi.number().default(3001),
+        DATABASE_URL: Joi.string().uri().required(),
+        JWT_SECRET: Joi.string().min(16).required(),
+        SMTP_HOST: Joi.string().optional(),
+        SMTP_PORT: Joi.number().optional(),
       }),
     }),
     ContactsModule,

@@ -1,27 +1,35 @@
-version: '3.9'
 services:
   api:
     build: ./apps/api
-    command: node dist/main.js
+    command: npm run dev
     environment:
       - NODE_ENV=development
+      - PORT=3001
+      - DATABASE_URL=postgresql://tms:tms@db:5432/tms?schema=public
+      - JWT_SECRET=dev-secret-change-me
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
     ports:
       - "3001:3001"
     depends_on:
       - db
     volumes:
       - ./apps/api:/app
+      - /app/node_modules
   web:
     build: ./apps/web
-    command: node node_modules/next/dist/bin/next dev
+    command: npm run dev
     environment:
       - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
     ports:
       - "3000:3000"
     depends_on:
       - api
     volumes:
       - ./apps/web:/app
+      - ./tsconfig.base.json:/tsconfig.base.json:ro
+      - /app/node_modules
   db:
     image: postgres:16-alpine
     environment:

@@ -41,14 +41,18 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Package manager policy
   - [x] Choose and enforce npm across repo (.npmrc, engines)
   - [x] Commit a single lockfile at root; enforce in CI
+  - [x] Set root `packageManager` to npm (remove Yarn declarations) to prevent auto-installs
+  - [x] Remove stray Yarn lockfiles and ignore `yarn.lock` repo-wide
 - [x] CI hardening
   - [x] Use `npm ci` with caching instead of `npm install`
-  - [x] Add `tsc --noEmit` typecheck across workspaces
+  - [ ] Enforce `tsc --noEmit` typecheck across workspaces in CI
+  - [ ] Add `typecheck` scripts per workspace and a root aggregator
+  - [ ] Remove `|| true` so CI fails on type errors
   - [x] Add `prettier --check` gate
   - [x] Add test job placeholder (will be wired in Phase 9)
 - [x] Supply chain security
   - [x] Container/image scanning (Trivy) for `apps/web` and `apps/api` images in CI
-  - [ ] SBOM generation in CI (Syft/Anchore) with artifact upload
+  - [x] SBOM generation in CI (Syft/Anchore) with artifact upload
   - [x] Enable GitHub secret scanning and push protection (repo settings)
   - [x] Add LICENSE file
 - [x] Governance and policies
@@ -61,6 +65,7 @@ This document is the single source of truth for the rebuild and modernization ef
   - [x] Add `.nvmrc` to pin Node version
   - [x] Add `.devcontainer` for consistent local setup
   - [x] Root README (added to legacy README section)
+  - [ ] docker-compose API dev: run in watch mode and inject container-local env (avoid `node dist/main.js`)
 - [ ] Branch protection and repo posture
   - [ ] Branch protection: require status checks (lint, build, test), signed commits, linear history (repo settings)
   - [x] OSSF Scorecard workflow enabled
@@ -81,6 +86,8 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Error handling middleware/filters
 - [x] Request ID interceptor + basic request logging
 - [x] OpenAPI (Swagger at /docs); versioned API prefix
+- [ ] Prisma hygiene: remove SQLite leftovers; keep Postgres-only migrations; add seed wiring
+- [ ] JWT/config: require `JWT_SECRET` (no defaults) and validate `DATABASE_URL`, SMTP vars
 
 ## Phase 3 — AuthN/AuthZ
 
@@ -106,7 +113,9 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Routing, layout shells, protected routes
 - [ ] Data layer: TanStack Query + typed client + error boundaries
 - [ ] Forms: React Hook Form + zod resolver
+- [x] Tailwind v4 PostCSS setup (`@tailwindcss/postcss`); npm-only lockfile enforced
 - [ ] CSP (nonce-based) with strict script-src and style-src once routes/assets are finalized
+- [ ] Fix type dependencies for React 18: `@types/react@18`, `@types/react-dom@18`, `@types/node`
 
 ### Immediate next steps
 
@@ -114,6 +123,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [x] Wire `.env` for Postgres and run migration in dev
 - [ ] Install shadcn/ui in `apps/web`; generate base components and theme
 - [ ] Add initial auth pages (sign-in, reset password) using shadcn/ui
+- [ ] Fix web type deps and start dev server (`@types/react@18`, `@types/react-dom@18`, `@types/node`)
 - [x] Add CI skeleton (GitHub Actions) for install → typecheck → lint → build
 
 ## Phase 5 — Core domain APIs
@@ -164,6 +174,7 @@ This document is the single source of truth for the rebuild and modernization ef
 - [ ] Content Security Policy (nonce-based), HSTS, XFO, Referrer-Policy, Permissions-Policy
 - [ ] Input validation on all endpoints, output encoding in UI
 - [ ] Rate limiting and abuse protection on public endpoints
+- [ ] Consolidate rate limiting strategy (choose Nest Throttler or `@fastify/rate-limit`, not both)
 - [ ] Secrets: runtime env only, rotation policy, no secrets in VCS
 - [ ] Dependency scanning + patch cadence
 - [ ] Backup/restore and disaster recovery drills
