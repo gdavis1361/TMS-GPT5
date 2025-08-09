@@ -64,6 +64,26 @@ services:
       - "8025:8025"
       - "1025:1025"
 
+  prometheus:
+    build:
+      context: ./monitoring/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.retention.time=15d
+    ports:
+      - "9090:9090"
+    depends_on:
+      - api
+
+  grafana:
+    build:
+      context: ./monitoring/grafana
+    ports:
+      - "3002:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+
 volumes:
   db_data:
   minio_data:
