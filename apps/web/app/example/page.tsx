@@ -1,7 +1,7 @@
 "use client"
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { createApiClient } from '../../api/client'
+import { createApiClient } from '../../src/api/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
